@@ -19,7 +19,23 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <style>
+        .msg-box {
+            max-width: 800px;
+            margin: auto;
+            background: #ebebeb;
+            padding-top: 10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .time-bar {
+            height: 5px;
+            margin-top: 10px;
+            background-color: var(--theme);
+            transition: width 3s linear;
+            width: 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -249,6 +265,7 @@
 <!--==================================================-->
 <section class="account py-5 js-waypoint-sticky">
     <div class="container">
+        <h4 class="msg-box text-center"></h4>
         <h1 class="text-center">Account</h1>
         <br>
         <div class="registration">
@@ -256,44 +273,44 @@
             <div class="title">Registration</div>
             <div class="content">
                 <!-- Registration form -->
-                <form action="#">
+                <form action="#" method="post">
                     <div class="user-details">
                         <!-- Input for First Name -->
                         <div class="input-box">
                             <span class="details">First Name</span>
-                            <input type="text" placeholder="Enter your first name" required>
+                            <input name="fName" type="text" placeholder="Enter your first name" required>
                         </div>
                         <!-- Input for Last Name -->
                         <div class="input-box">
                             <span class="details">Last Name</span>
-                            <input type="text" placeholder="Enter your last name" required>
+                            <input name="lName" type="text" placeholder="Enter your last name" required>
                         </div>
                         <!-- Input for Email -->
                         <div class="input-box">
                             <span class="details">Email</span>
-                            <input type="email" placeholder="Enter your email" required>
+                            <input name="email" type="email" placeholder="Enter your email" required>
                         </div>
                         <!-- Input for Phone Number -->
                         <div class="input-box">
                             <span class="details">Phone Number</span>
-                            <input type="text" placeholder="Enter your number" required>
+                            <input name="phone" type="text" placeholder="Enter your number" required>
                         </div>
                         <!-- Input for Password -->
                         <div class="input-box">
                             <span class="details">Password</span>
-                            <input type="password" placeholder="Enter your password" required>
+                            <input name="password" type="password" placeholder="Enter your password" required>
                         </div>
                         <!-- Input for Confirm Password -->
                         <div class="input-box">
                             <span class="details">Confirm Password</span>
-                            <input type="password" placeholder="Confirm your password" required>
+                            <input name="confirm_password" type="password" placeholder="Confirm your password" required>
                         </div>
                     </div>
                     <div class="gender-details">
                         <!-- Radio buttons for gender selection -->
-                        <input type="radio" name="gender" id="dot-1">
-                        <input type="radio" name="gender" id="dot-2">
-                        <input type="radio" name="gender" id="dot-3">
+                        <input type="radio" name="gender" id="dot-1" value="Male">
+                        <input type="radio" name="gender" id="dot-2" value="Female">
+                        <input type="radio" name="gender" id="dot-3" value="Others">
                         <span class="gender-title">Gender</span>
                         <div class="category">
                             <!-- Label for Male -->
@@ -309,7 +326,7 @@
                             <!-- Label for Prefer not to say -->
                             <label for="dot-3">
                             <span class="dot three"></span>
-                            <span class="gender">Prefer not to say</span>
+                            <span class="gender">Others</span>
                             </label>
                         </div>
                     </div>
@@ -480,6 +497,104 @@
     myFunction();
     }
 </script>
+
+<!-- PHP -->
+<?php
+error_reporting(0);
+include 'database/dbConnection.php';
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the form data
+    $firstName = $_POST['fName'];
+    $lastName = $_POST['lName'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
+    $gender = $_POST['gender'];
+
+    // Check if passwords match
+    if ($password !== $confirmPassword) {
+        ?>
+            <script>
+                let msg_box = document.querySelector(".msg-box");
+                msg_box.style.display = "block";
+                msg_box.innerText = "Passwords did not match!";
+                let timeBar = document.createElement("div");
+                timeBar.className = "time-bar";
+                msg_box.appendChild(timeBar);
+                setTimeout(() => {
+                    msg_box.style.display = "none";
+                    msg_box.removeChild(timeBar);
+                }, 3000);
+                setTimeout(() => {
+                    timeBar.style.width = "100%";
+                }, 10);
+            </script>
+        <?php
+        exit();
+    }
+
+    // check fill up the radio or not
+    if ($gender == "") {
+        ?>
+        <script>
+                let msg_box = document.querySelector(".msg-box");
+                msg_box.style.display = "block";
+                msg_box.innerText = "Gender Option Not Selected!";
+                let timeBar = document.createElement("div");
+                timeBar.className = "time-bar";
+                msg_box.appendChild(timeBar);
+                setTimeout(() => {
+                    msg_box.style.display = "none";
+                    msg_box.removeChild(timeBar);
+                }, 3000);
+                setTimeout(() => {
+                    timeBar.style.width = "100%";
+                }, 10);
+            </script>
+        <?php
+    }
+
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Prepare the SQL statement
+    $sql = "INSERT INTO user_info (user_fName, user_lName, user_phone, user_email, user_gender, user_password) VALUES (?, ?, ?, ?, ?, ?)";
+
+    // Initialize the prepared statement
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssssss", $firstName, $lastName, $phone, $email, $gender, $hashedPassword);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        ?>
+        <script>
+                let msg_box = document.querySelector(".msg-box");
+                msg_box.style.display = "block";
+                msg_box.innerText = "Registration successful!";
+                let timeBar = document.createElement("div");
+                timeBar.className = "time-bar";
+                msg_box.appendChild(timeBar);
+                setTimeout(() => {
+                    msg_box.style.display = "none";
+                    msg_box.removeChild(timeBar);
+                }, 3000);
+                setTimeout(() => {
+                    timeBar.style.width = "100%";
+                }, 10);
+            </script>
+        <?php
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close the statement and connection
+    $stmt->close();
+    $con->close();
+}
+?>
     
 </body>
 </html>

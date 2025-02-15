@@ -220,14 +220,11 @@
         <i class="ri-close-large-fill"></i>
     </div><br>
     <h2 class="cart-title">Your Cart</h2><hr>
-
-    
     <div class="cart-content">
         <!-- Recreatable component -->
         <h2 style="border-radius: 10px;padding: 30px 0;background: var(--topback);" class="card cart-title">No Items Found</h2>
         <!-- End -->
     </div>
-
     <hr>
     <div class="total">
         <div class="total-title">Total</div>
@@ -257,17 +254,17 @@
             <div class="title">Login</div>
             <div class="content">
               <!-- Login form -->
-              <form action="#">
+              <form action="#" method="post">
                 <div class="user-details full-input-box">
                   <!-- Input for phone number -->
                   <div class="input-box">
                     <span class="details">Phone Number</span>
-                    <input type="text" placeholder="Enter your number" required>
+                    <input name="phone" type="text" placeholder="Enter your number" required>
                   </div>
                   <!-- Input for Password -->
                   <div class="input-box">
                     <span class="details">Password</span>
-                    <input type="password" placeholder="Enter your password" required>
+                    <input name="password" type="password" placeholder="Enter your password" required>
                   </div>
                 </div>
                 <br>
@@ -439,5 +436,35 @@
     }
 </script>
     
+<?php
+// error_reporting(0);
+include 'database/dbConnection.php'; // Include your database connection file
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $phone = $_POST['phone'];
+    $password = $_POST['password'];
+
+    // Query to check if the user exists
+    $query = "SELECT * FROM user_info WHERE user_phone='$phone'";
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+        $user = mysqli_fetch_assoc($result);
+        if (password_verify($password, $user['user_password'])) {
+            $_SESSION['phone'] = $phone;
+            // header('Location: profile.php');
+            ?>
+            <meta http-equiv="refresh" content="0;url=profile.php">
+            <?php
+            exit();
+        } else {
+            $error = "Invalid phone number or password";
+        }
+    } else {
+        $error = "Invalid phone number or password";
+    }
+}
+?>
+
 </body>
 </html>
