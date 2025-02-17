@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['phone'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -258,27 +266,22 @@
                             <tr>
                                 <td>First Name</td>
                                 <td>:</td>
-                                <td>Fardin</td>
+                                <td><?php echo $_SESSION['firstname']; ?></td>
                             </tr>
                             <tr>
                                 <td>Last Name</td>
                                 <td>:</td>
-                                <td>Ahmed</td>
+                                <td><?php echo $_SESSION['lastname']; ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
                                 <td>:</td>
-                                <td>fardinahmed7443@gmail.com</td>
+                                <td><?php echo $_SESSION['email']; ?></td>
                             </tr>
                             <tr>
                                 <td>Phone Number</td>
                                 <td>:</td>
-                                <td>01944667441</td>
-                            </tr>
-                            <tr>
-                                <td>Address</td>
-                                <td>:</td>
-                                <td>Dhanmondi, Dhaka-1209</td>
+                                <td><?php echo $_SESSION['phone']; ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -290,7 +293,7 @@
                         Edit Information <i class="ri-edit-box-line"></i>
                     </button>
                 </a>    
-                <a href="#">
+                <a href="logout.php">
                     <button class="btn btn-dark">
                        Logout <i class="ri-logout-box-line"></i>
                     </button>

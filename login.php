@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['phone'])) {
+    header("Location: profile.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +27,23 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <style>
+        .msg-box {
+            max-width: 500px;
+            margin: auto;
+            background: #ebebeb;
+            padding-top: 10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .time-bar {
+            height: 5px;
+            margin-top: 10px;
+            background-color: var(--theme);
+            transition: width 3s linear;
+            width: 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -247,6 +270,11 @@
 <!--============================================-->
 <section class="account py-5">
     <div class="container js-waypoint-sticky">
+        <h4 class="msg-box text-center">
+            <?php
+                echo $error;
+            ?>
+        </h4>
         <h1 class="text-center">Account</h1>
         <br>
         <div class="login">
@@ -434,8 +462,26 @@
     if (mediaQuery.matches) {
     myFunction();
     }
+
+    // Print Login error Message
+    function printErrorMsg() {
+            let msg_box = document.querySelector(".msg-box");
+            msg_box.style.display = "block";
+            msg_box.innerText = "Invalid phone number or password";
+            let timeBar = document.createElement("div");
+            timeBar.className = "time-bar";
+            msg_box.appendChild(timeBar);
+            setTimeout(() => {
+                msg_box.style.display = "none";
+                msg_box.removeChild(timeBar);
+            }, 3000);
+            setTimeout(() => {
+                timeBar.style.width = "100%";
+            }, 10);
+    }
+
 </script>
-    
+
 <?php
 // error_reporting(0);
 include 'database/dbConnection.php'; // Include your database connection file
@@ -451,17 +497,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_num_rows($result) == 1) {
         $user = mysqli_fetch_assoc($result);
         if (password_verify($password, $user['user_password'])) {
-            $_SESSION['phone'] = $phone;
-            // header('Location: profile.php');
+            // Set value
+            $_SESSION['firstname'] = $user['user_fName'];
+            $_SESSION['lastname'] = $user['user_lName'];
+            $_SESSION['phone'] = $user['user_phone'];
+            $_SESSION['email'] = $user['user_email'];
+            // header("Location: profile.php");
             ?>
             <meta http-equiv="refresh" content="0;url=profile.php">
             <?php
             exit();
         } else {
-            $error = "Invalid phone number or password";
+            echo "<script>printErrorMsg();</script>";
         }
     } else {
-        $error = "Invalid phone number or password";
+        echo "<script>printErrorMsg();</script>";
     }
 }
 ?>

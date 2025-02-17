@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['phone'])) {
+    header("Location: profile.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -570,7 +577,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute the statement
     if ($stmt->execute()) {
         ?>
-        <script>
+            <script>
                 let msg_box = document.querySelector(".msg-box");
                 msg_box.style.display = "block";
                 msg_box.innerText = "Registration successful!";
@@ -580,11 +587,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 setTimeout(() => {
                     msg_box.style.display = "none";
                     msg_box.removeChild(timeBar);
-                }, 3000);
+                }, 1000);
                 setTimeout(() => {
                     timeBar.style.width = "100%";
-                }, 10);
+                }, 0);
             </script>
+            <meta http-equiv="refresh" content="1;url=login.php">
         <?php
     } else {
         echo "Error: " . $stmt->error;
