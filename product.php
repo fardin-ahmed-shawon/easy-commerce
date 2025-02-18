@@ -467,83 +467,89 @@
     function displayProductDetails() {
         const productId = localStorage.getItem('selectedProductId');
         if (!productId) return;
-    
-        const product = mens.find(item => item.id === productId) || womens.find(item => item.id === productId);
-        if (!product) return;
-    
-        const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-        const cartProduct = cartData.find(item => item.id === productId);
-        const quantity = cartProduct ? cartProduct.quantity : 1;
-    
-        const product_details = document.querySelector(".product-container");
-        product_details.setAttribute("product-id", `${product.id}`);
-        product_details.setAttribute("product-title", `${product.title}`);
-        product_details.setAttribute("product-img", `${product.images}`);
-        product_details.setAttribute("product-price", `${product.price}`);
-        product_details.setAttribute("product-quantity", `${quantity}`);
-    
-        product_details.innerHTML = `
-            <div class="product-images">
-                <div class="img-thumb">
-                    <img id="main-image" src="${product.images}" alt="Product Image">
-                    <div class="img-small">
-                        <img src="${product.images}" alt="Thumbnail 1" onclick="changeImage('${product.images}')">
-                        <img src="${product.images}" alt="Thumbnail 2" onclick="changeImage('${product.images}')">
-                        <img src="${product.images}" alt="Thumbnail 3" onclick="changeImage('${product.images}')">
-                        <img src="${product.images}" alt="Thumbnail 4" onclick="changeImage('${product.images}')">
+
+        fetch('get_products.php')
+            .then(response => response.json())
+            .then(data => {
+                const product = data.find(item => item.id === productId);
+                if (!product) return;
+
+                const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+                const cartProduct = cartData.find(item => item.id === productId);
+                const quantity = cartProduct ? cartProduct.quantity : 1;
+
+                const product_details = document.querySelector(".product-container");
+                product_details.setAttribute("product-id", `${product.id}`);
+                product_details.setAttribute("product-title", `${product.title}`);
+                product_details.setAttribute("product-img", `${product.image}`);
+                product_details.setAttribute("product-price", `${product.price}`);
+                product_details.setAttribute("product-quantity", `${quantity}`);
+
+                product_details.innerHTML = `
+                    <div class="product-images">
+                        <div class="img-thumb">
+                            <img id="main-image" src="${product.image}" alt="Product Image">
+                            <div class="img-small">
+                                <img src="${product.image}" alt="Thumbnail 1" onclick="changeImage('${product.image}')">
+                                <img src="${product.image}" alt="Thumbnail 2" onclick="changeImage('${product.image}')">
+                                <img src="${product.image}" alt="Thumbnail 3" onclick="changeImage('${product.image}')">
+                                <img src="${product.image}" alt="Thumbnail 4" onclick="changeImage('${product.image}')">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="product-details">
-                <div>
-                    <h2 class="js-waypoint-sticky">${product.title}</h2>
-                    <br>
-                    <p class="description">${product.description}</p>
-                    <h3 class="price">Tk. ${product.price}</h3>
-                    <br>
-                        <h6>Select Size:</h6>
-                        <div class="product-size-container">
-                            <div class="pt-2">
-                                <input type="radio" id="s" name="size" value="S">
-                                <label for="s">S</label>
-                            </div>
-                            <div class="pt-2">
-                                <input type="radio" id="m" name="size" value="M">
-                                <label for="m">M</label>
-                            </div>
-                            <div class="pt-2">
-                                <input type="radio" id="l" name="size" value="L">
-                                <label for="l">L</label>
-                            </div>
-                            <div class="pt-2">
-                                <input type="radio" id="xl" name="size" value="XL">
-                                <label for="xl">XL</label>
-                            </div>
-                            <div class="pt-2">
-                                <input type="radio" id="xxl" name="size" value="XXL">
-                                <label for="xxl">XXL</label>
-                            </div>
+                    <div class="product-details">
+                        <div>
+                            <h2 class="js-waypoint-sticky">${product.title}</h2>
+                            <br>
+                            <p class="description">${product.description}</p>
+                            <h3 class="price">Tk. ${product.price}</h3>
+                            <br>
+                                <h6>Select Size:</h6>
+                                <div class="product-size-container">
+                                    <div class="pt-2">
+                                        <input type="radio" id="s" name="size" value="S">
+                                        <label for="s">S</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="m" name="size" value="M">
+                                        <label for="m">M</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="l" name="size" value="L">
+                                        <label for="l">L</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="xl" name="size" value="XL">
+                                        <label for="xl">XL</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="xxl" name="size" value="XXL">
+                                        <label for="xxl">XXL</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="btn-and-counter">
+                                    <div class="counter">
+                                        <button onclick="minus()" class="minus">-</button>
+                                        <span class="num">${quantity}</span>
+                                        <button onclick="plus()" class="plus">+</button>
+                                    </div>
+                                    <button onclick="addProductToCart(this)" class="btn btn-danger add-cart">
+                                        <span>Add to Cart</span> <i class="ri-shopping-bag-line"></i>
+                                    </button>
+                                </div>
+                                <button onclick="window.location.href='viewCart.php';" class="btn btn-dark buy-now">
+                                    <span>View Cart</span> <i class="ri-shopping-cart-2-line"></i>
+                                </button>
                         </div>
-                        <br>
-                        <div class="btn-and-counter">
-                            <div class="counter">
-                                <button onclick="minus()" class="minus">-</button>
-                                <span class="num">${quantity}</span>
-                                <button onclick="plus()" class="plus">+</button>
-                            </div>
-                            <button onclick="addProductToCart(this)" class="btn btn-danger add-cart">
-                                <span>Add to Cart</span> <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                        <button onclick="window.location.href='viewCart.php';" class="btn btn-dark buy-now">
-                            <span>View Cart</span> <i class="ri-shopping-cart-2-line"></i>
-                        </button>
-                </div>
-            </div>
-        `;
+                    </div>
+                `;
+            })
+            .catch(error => console.error('Error fetching product details:', error));
     }
+
     window.onload = displayProductDetails;
-    </script>
+</script>
 
 </body>
 </html>
