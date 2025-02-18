@@ -1,1 +1,0 @@
-# Easy-Commerce Admin Pannel
