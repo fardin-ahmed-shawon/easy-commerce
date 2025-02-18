@@ -406,42 +406,47 @@
     /*************************************************/
     /* Add Men's products dynamically Category Page */
 
-    // Select the card container
-    const mens_products = document.querySelector('.mens-fashion-products');
+    // Fetch product data from the API
+    fetch('get_products.php')
+    .then(response => response.json())
+    .then(data => {
+        const mens_products = document.querySelector('.mens-fashion-products');
 
-    // Mapping Product Data
-    const categories = [...new Set(mens.map((item) => { return item }))];
+        // Mapping Product Data
+        const categories = [...new Set(data.map((item) => { return item }))];
 
-    const displayItem = (items) => {
-        mens_products.innerHTML = items.map((item) => {
-            return `
-                <div class="card" product-id="${item.id}" product-title="${item.title}" product-img="${item.images}" product-price="${item.price}" product-quantity="1">
-                    <img src="${item.images}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h6>${item.title}</h6>
-                        <p>${item.sub_category}</p>
-                        <h6>Tk. ${item.price}</h6>
-                        <button onclick="addToCart(this)" class="btn btn-outline-dark"><span>Add to Cart</span> <i class="ri-shopping-bag-line"></i></button>
-                        <button onclick="openProduct('${item.id}')" class="btn btn-dark"><span>Order Now</span> <i class="ri-shopping-cart-2-line"></i></button>
-                    </div>
-                </div>`;
-        }).join('');
-    };
+        const displayItem = (items) => {
+            mens_products.innerHTML = items.map((item) => {
+                return `
+                    <div class="card" product-id="${item.id}" product-title="${item.title}" product-img="${item.images}" product-price="${item.price}" product-quantity="1">
+                        <img src="${item.images}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h6>${item.title}</h6>
+                            <p>${item.sub_category}</p>
+                            <h6>Tk. ${item.price}</h6>
+                            <button onclick="addToCart(this)" class="btn btn-outline-dark"><span>Add to Cart</span> <i class="ri-shopping-bag-line"></i></button>
+                            <button onclick="openProduct('${item.id}')" class="btn btn-dark"><span>Order Now</span> <i class="ri-shopping-cart-2-line"></i></button>
+                        </div>
+                    </div>`;
+            }).join('');
+        };
 
-    displayItem(categories);
+        displayItem(categories);
 
-    document.getElementById('searchBar').addEventListener('keyup', (e) => {
-        const searchData = e.target.value.toLowerCase();
-        const filterData = categories.filter((item) => {
-            return item.title.toLowerCase().includes(searchData);
+        document.getElementById('searchBar').addEventListener('keyup', (e) => {
+            const searchData = e.target.value.toLowerCase();
+            const filterData = categories.filter((item) => {
+                return item.title.toLowerCase().includes(searchData);
+            });
+            displayItem(filterData);
         });
-        displayItem(filterData);
-    });
 
-    function openProduct(id) {
-        localStorage.setItem('selectedProductId', id);
-        window.location.href = 'product.php';
-    }
+        function openProduct(id) {
+            localStorage.setItem('selectedProductId', id);
+            window.location.href = 'product.php';
+        }
+    })
+    .catch(error => console.error('Error fetching product data:', error));
 
 </script>
 
