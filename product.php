@@ -491,9 +491,9 @@
                             <img id="main-image" src="${product.image}" alt="Product Image">
                             <div class="img-small">
                                 <img src="${product.image}" alt="Thumbnail 1" onclick="changeImage('${product.image}')">
-                                <img src="${product.image}" alt="Thumbnail 2" onclick="changeImage('${product.image}')">
-                                <img src="${product.image}" alt="Thumbnail 3" onclick="changeImage('${product.image}')">
-                                <img src="${product.image}" alt="Thumbnail 4" onclick="changeImage('${product.image}')">
+                                <img src="${product.image2}" alt="Thumbnail 2" onclick="changeImage('${product.image2}')">
+                                <img src="${product.image3}" alt="Thumbnail 3" onclick="changeImage('${product.image3}')">
+                                <img src="${product.image4}" alt="Thumbnail 4" onclick="changeImage('${product.image4}')">
                             </div>
                         </div>
                     </div>

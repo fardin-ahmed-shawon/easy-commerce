@@ -20,21 +20,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $product_keyword = $_POST['product_keyword'];
   $product_description = $_POST['product_description'];
   
-  // $product_img2 = $_POST['product_img2'];
-  // $product_img3 = $_POST['product_img3'];
-  // $product_img4 = $_POST['product_img4'];
-  
+  // Image 1
   $file_name = $_FILES['product_img1']['name'];
   $tempname = $_FILES['product_img1']['tmp_name'];
   $folder = '../img/'.$file_name;
 
+  // Image 2
+  $file_name2 = $_FILES['product_img2']['name'];
+  $tempname2 = $_FILES['product_img2']['tmp_name'];
+  $folder2 = '../img/'.$file_name2;
+
+  // Image 3
+  $file_name3 = $_FILES['product_img3']['name'];
+  $tempname3 = $_FILES['product_img3']['tmp_name'];
+  $folder3 = '../img/'.$file_name3;
+
+  // Image 4
+  $file_name4 = $_FILES['product_img4']['name'];
+  $tempname4 = $_FILES['product_img4']['tmp_name'];
+  $folder4 = '../img/'.$file_name4;
+
   // Move the uploaded file to the desired folder
-  if (move_uploaded_file($tempname, $folder)) {
+  
+  if (move_uploaded_file($tempname, $folder) && move_uploaded_file($tempname2, $folder2) && move_uploaded_file($tempname3, $folder3) && move_uploaded_file($tempname4, $folder4)) {
       // Prepare the SQL query
-      $query = "INSERT INTO product_info (product_title, product_price, product_main_ctg_name, product_sub_ctg_name, available_stock, size_option, product_keyword, product_description, product_img1) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $query = "INSERT INTO product_info (product_title, product_price, product_main_ctg_name, product_sub_ctg_name, available_stock, size_option, product_keyword, product_description, product_img1, product_img2, product_img3, product_img4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       
       $stmt = $conn->prepare($query);
-      $stmt->bind_param("sdssissss", $product_title, $product_price, $product_main_ctg_name, $product_sub_ctg_name, $available_stock, $size_option, $product_keyword, $product_description, $file_name);
+      $stmt->bind_param("sdssisssssss", $product_title, $product_price, $product_main_ctg_name, $product_sub_ctg_name, $available_stock, $size_option, $product_keyword, $product_description, $file_name, $file_name2, $file_name3, $file_name4);
 
       // Execute the query
       if ($stmt->execute()) {
@@ -42,14 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       } else {
           echo "Error: " . $stmt->error;
       }
+
   } else {
       echo "Failed to upload image.";
   }
 }
-
-
-
-
 /* <?php if ($success_message): ?>
       <div class="alert alert-success">
       <?php echo $success_message; ?>
