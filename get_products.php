@@ -14,7 +14,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         "price" => $row['product_price'],
         "main_category" => $row['product_main_ctg_name'],
         "sub_category" => $row['product_sub_ctg_name'],
-        "images" => $row['product_img1'] // Assuming you want to use the first image
+        "image" => 'img/' . $row['product_img1'] // Assuming you want to use the first image
     );
 }
 

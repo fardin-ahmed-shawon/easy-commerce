@@ -419,7 +419,7 @@
             mens_products.innerHTML = items.map((item) => {
                 return `
                     <div class="card" product-id="${item.id}" product-title="${item.title}" product-img="${item.images}" product-price="${item.price}" product-quantity="1">
-                        <img src="${item.images}" class="card-img-top" alt="...">
+                        <img src="${item.image}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h6>${item.title}</h6>
                             <p>${item.sub_category}</p>
