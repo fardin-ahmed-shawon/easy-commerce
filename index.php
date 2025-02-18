@@ -75,7 +75,7 @@
                     
                     <div class="txt-area">
                         <p class="bold-title">Cart</p>
-                        <p class="gray-title">Tk <span>0.00</span></p>
+                        <p class="gray-title"><span class="top-total-price">Tk 0.00</span></p>
                     </div>
                 </div>
 
@@ -327,7 +327,7 @@
                     <!-- <img src="img/home2.jpg" class="card-img-top" alt="..."> -->
                     <div class="card-body"><br>
                         <h1>women's Fashion</h1>
-                        <a href="womensPrd.php">
+                        <a href="category.php">
                             <button class="btn">
                                 <h1><i class="ri-arrow-right-s-line"></i></h1>
                             </button>
@@ -368,7 +368,7 @@
                     <p>Explore all the top selling product</p>
                 </div>
                 <div class="btn-align-end">
-                    <a href="womensPrd.php">
+                    <a href="category.php">
                         <button class="btn btn-dark btn-see-all">See All The Procuts <i class="ri-arrow-right-line"></i></button>
                     </a>
                 </div>
@@ -413,7 +413,7 @@
                     </div>
                     <div class="btn-align-end">
                         <a href="#">
-                            <button  onclick="window.location.href='womensPrd.php';" class="btn btn-dark btn-see-all">See All The Procuts <i class="ri-arrow-right-line"></i></button>
+                            <button  onclick="window.location.href='category.php';" class="btn btn-dark btn-see-all">See All The Procuts <i class="ri-arrow-right-line"></i></button>
                         </a>
                     </div>
                 </div>
