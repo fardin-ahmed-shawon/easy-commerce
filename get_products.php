@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 include 'database/dbConnection.php';
 
 $sql = "SELECT * FROM product_info";
-$result = mysqli_query($con, $sql);
+$result = mysqli_query($conn, $sql);
 
 $products = array();
 while ($row = mysqli_fetch_assoc($result)) {
@@ -19,5 +19,5 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 echo json_encode($products);
-mysqli_close($con);
+mysqli_close($conn);
 ?>

@@ -571,7 +571,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO user_info (user_fName, user_lName, user_phone, user_email, user_gender, user_password) VALUES (?, ?, ?, ?, ?, ?)";
 
     // Initialize the prepared statement
-    $stmt = $con->prepare($sql);
+    $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssssss", $firstName, $lastName, $phone, $email, $gender, $hashedPassword);
 
     // Execute the statement
@@ -600,7 +600,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Close the statement and connection
     $stmt->close();
-    $con->close();
+    $conn->close();
 }
 ?>
     

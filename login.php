@@ -484,7 +484,7 @@ if (isset($_SESSION['phone'])) {
 
 <?php
 // error_reporting(0);
-include 'database/dbConnection.php'; // Include your database connection file
+include 'database/dbConnection.php'; // Include database connection file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = $_POST['phone'];
@@ -492,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Query to check if the user exists
     $query = "SELECT * FROM user_info WHERE user_phone='$phone'";
-    $result = mysqli_query($con, $query);
+    $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) == 1) {
         $user = mysqli_fetch_assoc($result);
