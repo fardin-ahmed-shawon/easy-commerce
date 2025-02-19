@@ -4,6 +4,19 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit();
 }
+// database connection
+include('database/dbConnection.php');
+
+// Update order status to "Processing" if the Accept button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
+  $order_no = $_POST['order_no'];
+  $update_sql = "UPDATE order_info SET order_status='Processing' WHERE order_no=?";
+  $stmt = $conn->prepare($update_sql);
+  $stmt->bind_param("i", $order_no);
+  $stmt->execute();
+  $stmt->close();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -241,45 +254,40 @@ if (!isset($_SESSION['admin'])) {
                       <th>Status</th>
                       <th colspan="2">Action</th>
                     </tr>
-                    <tr>
-                      <td>101</td>
-                      <td>27</td>
-                      <td>01944667441</td>
-                      <td>X2DY435</td>
-                      <td>A37M</td>
-                      <td>XXL</td>
-                      <td>4</td>
-                      <td>1000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-success">Pending</td>
-                      <td>
-                        <button class="btn btn-dark">Accept</button>
-                      </td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <!---->
-                    <tr>
-                      <td>201</td>
-                      <td>127</td>
-                      <td>01944667441</td>
-                      <td>58NXX93KH0</td>
-                      <td>B37M</td>
-                      <td>L</td>
-                      <td>3</td>
-                      <td>3000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>bKash</td>
-                      <td class="text-success">Pending</td>
-                      <td>
-                        <button class="btn btn-dark">Accept</button>
-                      </td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
+                    
+                    <?php
+                      // Fetch data from order_info table
+                      $sql = "SELECT order_no, user_id, user_address, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info";
+                      $result = $conn->query($sql);
+
+                      if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                          if ($row["order_status"] == 'Pending') {
+                            echo '<tr>
+                                  <td>' . $row["order_no"] . '</td>
+                                  <td>' . $row["user_id"] . '</td>
+                                  <td>' . $row["user_address"] . '</td>
+                                  <td>' . $row["invoice_no"] . '</td>
+                                  <td>' . $row["product_id"] . '</td>
+                                  <td>' . $row["product_size"] . '</td>
+                                  <td>' . $row["product_quantity"] . '</td>
+                                  <td>' . $row["total_price"] . ' Tk</td>
+                                  <td>' . $row["order_date"] . '</td>
+                                  <td>' . $row["payment_method"] . '</td>
+                                  <td class="text-success">' . $row["order_status"] . '</td>
+                                  <td>
+                                      <form method="post" action="">
+                                          <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                          <button type="submit" name="accept_order" class="btn btn-dark">Accept</button>
+                                      </form>
+                                  </td>
+                                  <td><button class="btn btn-danger">Delete</button></td>
+                                </tr>';
+                          }
+                        }
+                      }
+                    ?>
+                    
                   </tbody>
                </table>
               </div>

@@ -26,6 +26,7 @@ CREATE TABLE sub_category (
     sub_ctg_id INT PRIMARY KEY AUTO_INCREMENT,
     sub_ctg_name VARCHAR(100) NOT NULL,
     main_ctg_name VARCHAR(100) NOT NULL
+    FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE,
 );
 
 CREATE TABLE product_info (
@@ -47,6 +48,7 @@ CREATE TABLE product_info (
 CREATE TABLE order_info (
     order_no INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
+    user_phone VARCHAR(20) NOT NULL,
     user_address TEXT NOT NULL,
     invoice_no VARCHAR(50) NOT NULL,
     product_id INT NOT NULL,
@@ -84,7 +86,6 @@ CREATE TABLE purchase_history (
     total_price DECIMAL(10,2) NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
     order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_no) REFERENCES order_info(order_no) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product_info(product_id) ON DELETE CASCADE
 );

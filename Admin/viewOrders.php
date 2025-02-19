@@ -4,6 +4,8 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit();
 }
+// database connection
+include('database/dbConnection.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -239,249 +241,38 @@ if (!isset($_SESSION['admin'])) {
                       <th>Order Date</th>
                       <th>Payment Method</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th colspan="2">Action</th>
                     </tr>
-                    <tr>
-                      <td>102</td>
-                      <td>27</td>
-                      <td>01944667441</td>
-                      <td>X2DY435</td>
-                      <td>A38NS</td>
-                      <td>M</td>
-                      <td>2</td>
-                      <td>600 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-danger">Canceled</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>104</td>
-                      <td>28</td>
-                      <td>01944667225</td>
-                      <td>X2DZA436</td>
-                      <td>A35B</td>
-                      <td>L</td>
-                      <td>4</td>
-                      <td>2000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>105</td>
-                      <td>28</td>
-                      <td>01944667225</td>
-                      <td>X2DZA436</td>
-                      <td>A31M</td>
-                      <td>XL</td>
-                      <td>3</td>
-                      <td>1500 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>110</td>
-                      <td>31</td>
-                      <td>01714564267</td>
-                      <td>A7HBL83</td>
-                      <td>T48</td>
-                      <td>S</td>
-                      <td>1</td>
-                      <td>900 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-danger">Canceled</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>114</td>
-                      <td>35</td>
-                      <td>01544677441</td>
-                      <td>AB2DY435</td>
-                      <td>A37M</td>
-                      <td>XXL</td>
-                      <td>3</td>
-                      <td>1200 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-success">Shipped</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>115</td>
-                      <td>40</td>
-                      <td>01780667461</td>
-                      <td>X2DY430</td>
-                      <td>B35M</td>
-                      <td>M</td>
-                      <td>5</td>
-                      <td>2500 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Cash On Delivery</td>
-                      <td class="text-success">Completed</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <!---->
-                    <tr>
-                      <td>202</td>
-                      <td>127</td>
-                      <td>01944667441</td>
-                      <td>7X2DY435</td>
-                      <td>A38NS</td>
-                      <td>M</td>
-                      <td>2</td>
-                      <td>600 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>bKash</td>
-                      <td class="text-danger">Canceled</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>204</td>
-                      <td>128</td>
-                      <td>01944667225</td>
-                      <td>U84HSNI9</td>
-                      <td>A35B</td>
-                      <td>L</td>
-                      <td>4</td>
-                      <td>2000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>bKash</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>205</td>
-                      <td>128</td>
-                      <td>01944667225</td>
-                      <td>U84HSNI9</td>
-                      <td>A31M</td>
-                      <td>XL</td>
-                      <td>3</td>
-                      <td>1500 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>bKash</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>210</td>
-                      <td>171</td>
-                      <td>01470364781</td>
-                      <td>B7HBL83</td>
-                      <td>T48</td>
-                      <td>S</td>
-                      <td>1</td>
-                      <td>900 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Upay</td>
-                      <td class="text-danger">Canceled</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>206</td>
-                      <td>228</td>
-                      <td>01714564267</td>
-                      <td>M7GB83IS</td>
-                      <td>A35B</td>
-                      <td>L</td>
-                      <td>4</td>
-                      <td>2000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Nagad</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>207</td>
-                      <td>228</td>
-                      <td>01714564267</td>
-                      <td>M7GB83IS</td>
-                      <td>A31M</td>
-                      <td>XL</td>
-                      <td>3</td>
-                      <td>1500 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Nagad</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>214</td>
-                      <td>135</td>
-                      <td>01544677441</td>
-                      <td>P749CHB93</td>
-                      <td>A37M</td>
-                      <td>XXL</td>
-                      <td>3</td>
-                      <td>1200 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>bKash</td>
-                      <td class="text-success">Shipped</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>215</td>
-                      <td>140</td>
-                      <td>01780667461</td>
-                      <td>V749HFK2</td>
-                      <td>B35M</td>
-                      <td>M</td>
-                      <td>5</td>
-                      <td>2500 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Rocket</td>
-                      <td class="text-success">Completed</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>320</td>
-                      <td>91</td>
-                      <td>01714564267</td>
-                      <td>YZ849MPI</td>
-                      <td>B31M</td>
-                      <td>XXL</td>
-                      <td>4</td>
-                      <td>4000 Tk</td>
-                      <td>12-2-2025</td>
-                      <td>Upay</td>
-                      <td class="text-success">Processing</td>
-                      <td>
-                        <button class="btn btn-danger">Delete</button>
-                      </td>
-                    </tr>
+                    
+                    <?php
+                      // Fetch data from order_info table
+                      $sql = "SELECT order_no, user_id, user_address, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info";
+                      $result = $conn->query($sql);
+
+                      if ($result->num_rows > 0) {
+                        echo "";
+                        while($row = $result->fetch_assoc()) {
+                          if ($row["order_status"] != 'Pending') {
+                            echo '<tr>
+                                  <td>' . $row["order_no"] . '</td>
+                                  <td>' . $row["user_id"] . '</td>
+                                  <td>' . $row["user_address"] . '</td>
+                                  <td>' . $row["invoice_no"] . '</td>
+                                  <td>' . $row["product_id"] . '</td>
+                                  <td>' . $row["product_size"] . '</td>
+                                  <td>' . $row["product_quantity"] . '</td>
+                                  <td>' . $row["total_price"] . ' Tk</td>
+                                  <td>' . $row["order_date"] . '</td>
+                                  <td>' . $row["payment_method"] . '</td>
+                                  <td class="text-success">' . $row["order_status"] . '</td>
+                                  <td><button class="btn btn-dark">Accept</button></td>
+                                  <td><button class="btn btn-danger">Delete</button></td>
+                                </tr>';
+                          }
+                        }
+                      }
+                    ?>
+
                   </tbody>
                </table>
               </div>
