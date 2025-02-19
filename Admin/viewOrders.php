@@ -241,7 +241,7 @@ include('database/dbConnection.php');
                       <th>Order Date</th>
                       <th>Payment Method</th>
                       <th>Status</th>
-                      <th colspan="2">Action</th>
+                      <th>Action</th>
                     </tr>
                     
                     <?php
@@ -265,7 +265,6 @@ include('database/dbConnection.php');
                                   <td>' . $row["order_date"] . '</td>
                                   <td>' . $row["payment_method"] . '</td>
                                   <td class="text-success">' . $row["order_status"] . '</td>
-                                  <td><button class="btn btn-dark">Accept</button></td>
                                   <td><button class="btn btn-danger">Delete</button></td>
                                 </tr>';
                           }
