@@ -485,7 +485,64 @@
                 product_details.setAttribute("product-price", `${product.price}`);
                 product_details.setAttribute("product-quantity", `${quantity}`);
 
-                product_details.innerHTML = `
+                // If last 3 image is not found
+                if (product.image2 == "img\/" && product.image3 == "img\/" && product.image4 == "img\/") {
+                    product_details.innerHTML = `
+                    <div class="product-images">
+                        <div class="img-thumb">
+                            <img id="main-image" src="${product.image}" alt="Product Image">
+                            
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <div>
+                            <h2 class="js-waypoint-sticky">${product.title}</h2>
+                            <br>
+                            <p class="description">${product.description}</p>
+                            <h3 class="price">Tk. ${product.price}</h3>
+                            <br>
+                                <h6>Select Size:</h6>
+                                <div class="product-size-container">
+                                    <div class="pt-2">
+                                        <input type="radio" id="s" name="size" value="S">
+                                        <label for="s">S</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="m" name="size" value="M">
+                                        <label for="m">M</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="l" name="size" value="L">
+                                        <label for="l">L</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="xl" name="size" value="XL">
+                                        <label for="xl">XL</label>
+                                    </div>
+                                    <div class="pt-2">
+                                        <input type="radio" id="xxl" name="size" value="XXL">
+                                        <label for="xxl">XXL</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="btn-and-counter">
+                                    <div class="counter">
+                                        <button onclick="minus()" class="minus">-</button>
+                                        <span class="num">${quantity}</span>
+                                        <button onclick="plus()" class="plus">+</button>
+                                    </div>
+                                    <button onclick="addProductToCart(this)" class="btn btn-danger add-cart">
+                                        <span>Add to Cart</span> <i class="ri-shopping-bag-line"></i>
+                                    </button>
+                                </div>
+                                <button onclick="window.location.href='viewCart.php';" class="btn btn-dark buy-now">
+                                    <span>View Cart</span> <i class="ri-shopping-cart-2-line"></i>
+                                </button>
+                        </div>
+                    </div>
+                `;
+                } else {
+                    product_details.innerHTML = `
                     <div class="product-images">
                         <div class="img-thumb">
                             <img id="main-image" src="${product.image}" alt="Product Image">
@@ -544,6 +601,8 @@
                         </div>
                     </div>
                 `;
+                }
+
             })
             .catch(error => console.error('Error fetching product details:', error));
     }
