@@ -254,37 +254,42 @@ if (!isset($_SESSION['admin'])) {
     <script src="js/mens.js"></script>
 
     <script>
-      /*************************************************/
+    /*************************************************/
     /* Add Men's products dynamically Category Page */
 
-    // Select the card container
-    const mens_products = document.querySelector('.mens-fashion-products');
+    // Fetch product data from the API
+    fetch('../get_products.php')
+        .then(response => response.json())
+        .then(data => {
+            const mens_products = document.querySelector('.mens-fashion-products');
 
-    // Mapping Product Data
-    mens.map(item => {
-        // Create the card element
-        const card = document.createElement("div");
-        card.className = "card";
-                                    
-        // Insert Product data into the card
-        card.innerHTML = `
-            <img src="${item.images}" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h6>${item.title}</h6>
-              <h4>ID: ${item.id}</h4>
-              <p>Keyword: product name</p>
-              <p>Main Category: ${item.main_category}</p>
-              <p>Sub Category: ${item.sub_category}</p>
-              <p>Available Quantity: 15</p>
-              <p>Size: S, M, L, XL, XXL</p>
-              <h6>Tk. ${item.price}</h6>
-              <button class="btn btn-dark"><span>Edit</span> <span class="mdi mdi-square-edit-outline"></span></button>
-              <button class="btn btn-dark"><span>Delete</span> <span class="mdi mdi-trash-can-outline"></span></button>
-            </div>`;
-                                    
-        // Insert card into the product container
-        mens_products.appendChild(card); 
-    })
+            // Mapping Product Data
+            data.map(item => {
+                // Create the card element
+                const card = document.createElement("div");
+                card.className = "card";
+                                            
+                // Insert Product data into the card
+                card.innerHTML = `
+                    <img src="../${item.image}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h6>${item.title}</h6>
+                      <h4>ID: ${item.id}</h4>
+                      <p>Keyword: ${item.keyword}</p>
+                      <p>Main Category: ${item.main_category}</p>
+                      <p>Sub Category: ${item.sub_category}</p>
+                      <p>Available Quantity: ${item.available_stock}</p>
+                      <p>Size: ${item.size_option}</p>
+                      <h6>Tk. ${item.price}</h6>
+                      <button class="btn btn-dark"><span>Edit</span> <span class="mdi mdi-square-edit-outline"></span></button>
+                      <button class="btn btn-dark"><span>Delete</span> <span class="mdi mdi-trash-can-outline"></span></button>
+                    </div>`;
+                                            
+                // Insert card into the product container
+                mens_products.appendChild(card); 
+            });
+        })
+        .catch(error => console.error('Error fetching product details:', error));
     </script>
 
   </body>
