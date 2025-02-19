@@ -4,6 +4,78 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit();
 }
+// database connection
+include('database/dbConnection.php');
+
+// Update order status to "Shipped" if the Mark As Shipped button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_shipped"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info SET order_status = 'Shipped' WHERE invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+// Update order status to "Completed" if the Mark As Completed button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_completed"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info SET order_status = 'Completed' WHERE invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+// Update order status to "Canceled" if the Mark As Canceled button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info SET order_status = 'Canceled' WHERE invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+//------------------- For order_info & payment_info table both -----------------------------
+
+// Update order status to "Shipped" if the Mark As Shipped button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_shipped_both"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info, payment_info SET order_info.order_status = 'Shipped', payment_info.order_status = 'Shipped' WHERE order_info.invoice_no = '$invoice_no' AND payment_info.invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+// Update order status to "Completed" if the Mark As Completed button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_completed_both"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info, payment_info SET order_info.order_status = 'Completed', payment_info.order_status = 'Completed' WHERE order_info.invoice_no = '$invoice_no' AND payment_info.invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+// Update order status to "Canceled" if the Mark As Canceled button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE order_info, payment_info SET order_info.order_status = 'Canceled', payment_info.order_status = 'Canceled' WHERE order_info.invoice_no = '$invoice_no' AND payment_info.invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -239,18 +311,60 @@ if (!isset($_SESSION['admin'])) {
                         <th>Completed</th>
                         <th>Canceled</th>
                       </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>X2DZA436</td>
-                        <td>104, 105</td>
-                        <td class="text-success">Processing</td>
-                        <td>Cash On Delivery</td>
-                        <td><button onclick="window.location.href = 'invoice.php'" class="btn btn-dark">See Invoice</button></td>
-                        <td><button class="btn btn-success">Mark As Shipped</button></td>
-                        <td><button class="btn btn-success">Mark As Completed</button></td>
-                        <td><button class="btn btn-danger">Mark As Cancel</button></td>
-                      </tr>
-                      <tr>
+
+                      <?php
+                      // Fetch data from order_info table
+
+                      // Grouping the same Invoice No at Order No Column
+                      $sql = "SELECT invoice_no, GROUP_CONCAT(order_no ORDER BY order_no SEPARATOR ', ') as order_no, order_status, payment_method
+                      FROM order_info
+                      WHERE payment_method = 'Cash On Delivery' AND order_status != 'Pending'
+                      GROUP BY invoice_no, order_status, payment_method";
+
+                      $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                          $count = 1;
+                          while($row = $result->fetch_assoc()) {
+                            if ($row["payment_method"] == "Cash On Delivery" && $row["order_status"] != "Pending") {
+                              echo '<tr>
+                                <td>' . $count . '</td>
+                                <td>' . $row["invoice_no"] . '</td>
+                                <td>' . $row["order_no"] . '</td>
+                                <td class="text-success">' . $row["order_status"] . '</td>
+                                <td>' . $row["payment_method"] . '</td>
+                                <td><button onclick="window.location.href = \'invoice.php\'" class="btn btn-dark">See Invoice</button></td>
+
+                                <td>
+                                    <form method="post" action="">
+                                        <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                        <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                        <button type="submit" name="mark_shipped" class="btn btn-success">Mark As Shipped</button>
+                                    </form>
+                                </td>
+                                
+                                <td>
+                                  <form method="post" action="">
+                                        <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                        <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                        <button type="submit" name="mark_completed" class="btn btn-success">Mark As Completed</button>
+                                  </form>
+                                </td>
+                                <td>
+                                  <form method="post" action="">
+                                        <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                        <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                        <button type="submit" name="mark_canceled" class="btn btn-danger">Mark As Canceled</button>
+                                  </form>
+                                </td>
+                              </tr>';
+                              $count++;
+                            }
+                          }
+                        } 
+                      ?>
+
+                      <!-- <tr>
                         <td>2</td>
                         <td>A7HBL83</td>
                         <td>110</td>
@@ -282,7 +396,7 @@ if (!isset($_SESSION['admin'])) {
                         <td class="text-muted">Not Available</td>
                         <td class="text-muted">Not Available</td>
                         <td class="text-muted">Not Available</td>
-                      </tr>
+                      </tr> -->
                   </tbody>
                </table>
               </div>
@@ -308,7 +422,7 @@ if (!isset($_SESSION['admin'])) {
                           <th>Completed</th>
                           <th>Canceled</th>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                           <td>1</td>
                           <td>M7GB83IS</td>
                           <td>206, 207</td>
@@ -318,8 +432,67 @@ if (!isset($_SESSION['admin'])) {
                           <td><button class="btn btn-success">Mark As Shipped</button></td>
                           <td><button class="btn btn-success">Mark As Completed</button></td>
                           <td><button class="btn btn-danger">Mark As Cancel</button></td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+
+                        <?php
+                          // Query to retrieve data from payment_info table
+                          $sql = "SELECT invoice_no, 
+                          GROUP_CONCAT(CASE WHEN order_status != 'Pending' THEN order_no END SEPARATOR ', ') as order_no, 
+                          serial_no, 
+                          order_status, 
+                          payment_method, 
+                          acc_number, 
+                          transaction_id, 
+                          payment_date, 
+                          payment_status 
+                          FROM payment_info 
+                          GROUP BY invoice_no";
+                          $result = $conn->query($sql);
+
+                          $count = 1;
+                          if ($result->num_rows > 0) {
+                              while($row = $result->fetch_assoc()) {
+                                  if ($row["payment_status"] == "Paid") {
+                                    echo "<tr>";
+                                    echo "<td>" . $count . "</td>";
+                                    echo "<td>" . $row["invoice_no"] . "</td>";
+                                    echo "<td>" . $row["order_no"] . "</td>";
+                                    echo "<td class='text-success'>" . $row["order_status"] . "</td>";
+                                    echo "<td>" . $row["payment_method"] . "</td>";
+                                    echo "<td><button onclick=\"window.location.href = 'invoice.php'\" class='btn btn-dark'>See Invoice</button></td>";
+                                    echo '
+                                        <td>
+                                          <form method="post" action="">
+                                              <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                              <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                              <button type="submit" name="mark_shipped_both" class="btn btn-success">Mark As Shipped</button>
+                                          </form>
+                                        </td>
+                                    
+                                        <td>
+                                          <form method="post" action="">
+                                                <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                                <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                                <button type="submit" name="mark_completed_both" class="btn btn-success">Mark As Completed</button>
+                                          </form>
+                                        </td>
+                                        <td>
+                                          <form method="post" action="">
+                                                <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                                <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                                <button type="submit" name="mark_canceled_both" class="btn btn-danger">Mark As Canceled</button>
+                                          </form>
+                                        </td>';
+                                    echo "</tr>";
+                                    $count++;
+                                  }
+                              }
+                          } else {
+                              echo "0 results";
+                          }
+                        ?>
+
+                        <!-- <tr>
                           <td>2</td>
                           <td>YZ849MPI</td>
                           <td>320</td>
@@ -351,7 +524,7 @@ if (!isset($_SESSION['admin'])) {
                           <td class="text-muted">Not Available</td>
                           <td class="text-muted">Not Available</td>
                           <td class="text-muted">Not Available</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                  </table>
                 </div>

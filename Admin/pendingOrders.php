@@ -9,13 +9,23 @@ include('database/dbConnection.php');
 
 // Update order status to "Processing" if the Accept button is pressed
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
+  // Upddate order_info table
   $order_no = $_POST['order_no'];
   $update_sql = "UPDATE order_info SET order_status='Processing' WHERE order_no=?";
   $stmt = $conn->prepare($update_sql);
   $stmt->bind_param("i", $order_no);
   $stmt->execute();
   $stmt->close();
+
+  // Update payment_info table
+  $update_sql = "UPDATE payment_info SET order_status='Processing' WHERE order_no=?";
+  $stmt = $conn->prepare($update_sql);
+  $stmt->bind_param("i", $order_no);
+  $stmt->execute();
+  $stmt->close();
 }
+
+
 
 ?>
 <!DOCTYPE html>

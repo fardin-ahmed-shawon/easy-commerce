@@ -4,6 +4,46 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit();
 }
+// database connection
+include('database/dbConnection.php');
+
+// Update payment status to "Paid" if the Mark As Paid button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_paid"])) {
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE payment_info SET payment_status = 'Paid' WHERE invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
+// Update order status to "Canceled" if the Cancel button is pressed
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mark_cancel'])) {
+  // Upddate order_info table
+  $order_no = $_POST['order_no'];
+  $update_sql = "UPDATE order_info SET order_status='Canceled' WHERE order_no=?";
+  $stmt = $conn->prepare($update_sql);
+  $stmt->bind_param("i", $order_no);
+  $stmt->execute();
+  $stmt->close();
+
+  // Update payment_info table
+  $update_sql = "UPDATE payment_info SET order_status='Canceled' WHERE order_no=?";
+  $stmt = $conn->prepare($update_sql);
+  $stmt->bind_param("i", $order_no);
+  $stmt->execute();
+  $stmt->close();
+  //
+  $invoice_no = $_POST["invoice_no"];
+  $sql_update = "UPDATE payment_info SET payment_status = 'Not Available' WHERE invoice_no = '$invoice_no'";
+  if ($conn->query($sql_update) === TRUE) {
+      $msg = "Order status updated successfully";
+  } else {
+      $msg = "Error updating record: " . $conn->error;
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -229,7 +269,7 @@ if (!isset($_SESSION['admin'])) {
                 <table class="table table-under-bordered">
                   <tbody>
                       <tr>
-                        <th>Payment No</th>
+                        <th>Serial No</th>
                         <th>Invoice No</th>
                         <th>Order No</th>
                         <th>Order Status</th>
@@ -240,23 +280,56 @@ if (!isset($_SESSION['admin'])) {
                         <th>Payment Status</th>
                         <th colspan="2">Action</th>
                       </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>U84HSNI9</td>
-                        <td>
-                          204<br><br>
-                          205
-                        </td>
-                        <td class="text-success">Processing</td>
-                        <td>bKash</td>
-                        <td>01556602995</td>
-                        <td>X74HS98OPB80673NZ</td>
-                        <td>12-2-2025</td>
-                        <td class="text-danger">Unpaid</td>
-                        <td><button class="btn btn-dark">Mark As Paid</button></td>
-                        <td><button class="btn btn-danger">Cancel</button></td>
-                      </tr>
-                      <tr>
+
+                      <?php
+                        $sql = "SELECT invoice_no, 
+                        GROUP_CONCAT(CASE WHEN order_status != 'Pending' THEN order_no END SEPARATOR ', ') as order_no, 
+                        serial_no, 
+                        order_status, 
+                        payment_method, 
+                        acc_number, 
+                        transaction_id, 
+                        payment_date, 
+                        payment_status 
+                        FROM payment_info 
+                        GROUP BY invoice_no";
+                        
+                        $result = $conn->query($sql);
+                        
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) {
+                                if ($row["order_status"] != "Pending") {
+                                  echo "<tr>";
+                                  echo "<td>" . $row["serial_no"] . "</td>";
+                                  echo "<td>" . $row["invoice_no"] . "</td>";
+                                  echo "<td>" . $row["order_no"] . "</td>";
+                                  echo "<td class='text-success'>" . $row["order_status"] . "</td>";
+                                  echo "<td>" . $row["payment_method"] . "</td>";
+                                  echo "<td>" . $row["acc_number"] . "</td>";
+                                  echo "<td>" . $row["transaction_id"] . "</td>";
+                                  echo "<td>" . $row["payment_date"] . "</td>";
+                                  echo "<td class='text-success'>" . $row["payment_status"] . "</td>";
+                                  echo '<td>
+                                          <form method="post" action="">
+                                            <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                            <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                            <button type="submit" name="mark_paid" class="btn btn-dark">Mark As Paid</button>
+                                          </form>
+                                        </td>';
+                                  echo '<td>
+                                          <form method="post" action="">
+                                            <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
+                                            <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
+                                            <button type="submit" name="mark_cancel" class="btn btn-danger">Cancel</button>
+                                          </form>
+                                       </td>';
+                                  echo "</tr>";
+                                }
+                            }
+                        } 
+                      ?>
+
+                      <!-- <tr>
                         <td>2</td>
                         <td>B7HBL83</td>
                         <td>
@@ -331,7 +404,7 @@ if (!isset($_SESSION['admin'])) {
                         <td class="text-success">Paid</td>
                         <td class="text-muted">Not Available</td>
                         <td class="text-muted">Not Available</td>
-                      </tr>
+                      </tr> -->
                   </tbody>
                </table>
               </div>

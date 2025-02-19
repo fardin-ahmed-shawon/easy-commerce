@@ -32,7 +32,7 @@ CREATE TABLE sub_category (
 CREATE TABLE product_info (
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_title VARCHAR(255) NOT NULL,
-    product_price DECIMAL(10,2) NOT NULL,
+    product_price INT NOT NULL,
     product_main_ctg_name VARCHAR(100) NOT NULL,
     product_sub_ctg_name VARCHAR(100) NOT NULL,
     available_stock INT NOT NULL,
