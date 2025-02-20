@@ -304,39 +304,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                       <th colspan="2">Action</th>
                     </tr>
                     <?php
-                // Fetch data from order_info table
-                $sql = "SELECT order_no, user_id, user_phone, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info WHERE order_status = 'Pending'";
-                $result = $conn->query($sql);
+                    // Fetch data from order_info table
+                    $sql = "SELECT order_no, user_id, user_phone, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info WHERE order_status = 'Pending'";
+                    $result = $conn->query($sql);
 
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                            <td>{$row['order_no']}</td>
-                            <td>{$row['user_id']}</td>
-                            <td>{$row['user_phone']}</td>
-                            <td>{$row['invoice_no']}</td>
-                            <td>{$row['product_id']}</td>
-                            <td>{$row['product_size']}</td>
-                            <td>{$row['product_quantity']}</td>
-                            <td>{$row['total_price']} Tk</td>
-                            <td>{$row['order_date']}</td>
-                            <td>{$row['payment_method']}</td>
-                            <td class='text-primary'>{$row['order_status']}</td>
-                            <td>
-                                <form method='post' action=''>
-                                    <input type='hidden' name='order_no' value='{$row['order_no']}'>
-                                    <button type='submit' name='accept_order' class='btn btn-dark'>Accept</button>
-                                </form>
-                            </td>
-                            <td>
-                                <a href='deleteOrder.php?o_n={$row['order_no']}'>
-                                    <button class='btn btn-danger' onclick='return checkDelete()'>Delete</button>
-                                </a>
-                            </td>
-                        </tr>";
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                <td>{$row['order_no']}</td>
+                                <td>{$row['user_id']}</td>
+                                <td>{$row['user_phone']}</td>
+                                <td>{$row['invoice_no']}</td>
+                                <td>{$row['product_id']}</td>
+                                <td>{$row['product_size']}</td>
+                                <td>{$row['product_quantity']}</td>
+                                <td>{$row['total_price']} Tk</td>
+                                <td>{$row['order_date']}</td>
+                                <td>{$row['payment_method']}</td>
+                                <td class='text-primary'>{$row['order_status']}</td>
+                                <td>
+                                    <form method='post' action=''>
+                                        <input type='hidden' name='order_no' value='{$row['order_no']}'>
+                                        <button type='submit' name='accept_order' class='btn btn-dark'>Accept</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href='deleteOrder.php?o_n={$row['order_no']}'>
+                                        <button class='btn btn-danger' onclick='return checkDelete()'>Delete</button>
+                                    </a>
+                                </td>
+                            </tr>";
+                        }
                     }
-                }
-                ?>
+                    ?>
                   </tbody>
                </table>
               </div>
