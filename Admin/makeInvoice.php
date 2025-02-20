@@ -331,11 +331,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"]))
                                 <td>' . $count . '</td>
                                 <td>' . $row["invoice_no"] . '</td>
                                 <td>' . $row["order_no"] . '</td>
-                                <td class="text-success">' . $row["order_status"] . '</td>
+                                <td class="order-status">' . $row["order_status"] . '</td>
                                 <td>' . $row["payment_method"] . '</td>
-                                <td><button onclick="window.location.href = \'invoice.php\'" class="btn btn-dark">See Invoice</button></td>
+                                <td class="invoice-button"><button onclick="window.location.href = \'invoice.php\'" class="btn btn-dark">See Invoice</button></td>
 
-                                <td>
+                                <td class="shipped-button">
                                     <form method="post" action="">
                                         <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                         <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
@@ -343,14 +343,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"]))
                                     </form>
                                 </td>
                                 
-                                <td>
+                                <td class="completed-button">
                                   <form method="post" action="">
                                         <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                         <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
                                         <button type="submit" name="mark_completed" class="btn btn-success">Mark As Completed</button>
                                   </form>
                                 </td>
-                                <td>
+                                <td class="canceled-button">
                                   <form method="post" action="">
                                         <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                         <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
@@ -457,11 +457,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"]))
                                     echo "<td>" . $count . "</td>";
                                     echo "<td>" . $row["invoice_no"] . "</td>";
                                     echo "<td>" . $row["order_no"] . "</td>";
-                                    echo "<td class='text-success'>" . $row["order_status"] . "</td>";
+                                    echo "<td class='order-status'>" . $row["order_status"] . "</td>";
                                     echo "<td>" . $row["payment_method"] . "</td>";
-                                    echo "<td><button onclick=\"window.location.href = 'invoice.php'\" class='btn btn-dark'>See Invoice</button></td>";
+                                    echo "<td class='invoice-button'><button onclick=\"window.location.href = 'invoice.php'\" class='btn btn-dark'>See Invoice</button></td>";
                                     echo '
-                                        <td>
+                                        <td class="shipped-button">
                                           <form method="post" action="">
                                               <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                               <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
@@ -469,14 +469,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"]))
                                           </form>
                                         </td>
                                     
-                                        <td>
+                                        <td class="completed-button">
                                           <form method="post" action="">
                                                 <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                                 <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
                                                 <button type="submit" name="mark_completed_both" class="btn btn-success">Mark As Completed</button>
                                           </form>
                                         </td>
-                                        <td>
+                                        <td class="canceled-button">
                                           <form method="post" action="">
                                                 <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                                 <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">

@@ -24,11 +24,6 @@ include('database/dbConnection.php');
 
     <!-- Custom CSS-->
     <link rel="stylesheet" href="css/style.css">
-    <style>
-      .status {
-        color: #1bcfb4;
-      }
-    </style>
   </head>
   <body>
     <div class="container-scroller">
@@ -250,7 +245,7 @@ include('database/dbConnection.php');
                     
                     <?php
                       // Fetch data from order_info table
-                      $sql = "SELECT order_no, user_id, user_address, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info";
+                      $sql = "SELECT order_no, user_id, user_phone, invoice_no, product_id, product_quantity, product_size, total_price, payment_method, order_date, order_status FROM order_info";
                       $result = $conn->query($sql);
 
                       if ($result->num_rows > 0) {
@@ -260,7 +255,7 @@ include('database/dbConnection.php');
                             echo "<tr>
                                   <td>$row[order_no]</td>
                                   <td>$row[user_id]</td>
-                                  <td>$row[user_address]</td>
+                                  <td>$row[user_phone]</td>
                                   <td>$row[invoice_no]</td>
                                   <td>$row[product_id]</td>
                                   <td>$row[product_size]</td>
