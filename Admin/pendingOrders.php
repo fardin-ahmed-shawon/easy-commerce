@@ -24,9 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
   $stmt->execute();
   $stmt->close();
 }
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -333,7 +330,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
-
 
   </body>
 </html>
