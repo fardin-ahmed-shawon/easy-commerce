@@ -254,31 +254,7 @@
         <div class="view-cart-container">
             <!-- Left Area -->
             <div class="cart-list" id="cart-list">
-                <!-- Cart item -->
-                <!-- <div class="cart-item">
-                    <div class="product-img">
-                        <img src="img/product.jpg" alt="cart-img">
-                    </div>
-                    <div class="product-title">
-                        <h5>Navy Blue Striped Shirt</h5>
-                    </div>
-                    <div class="unit-price">
-                        Tk. <span>1000</span>
-                    </div>
-                    <div class="quantity cart-box">
-                        <div class="cart-quantity">
-                            <button class="decrement" id="decrement">-</button>
-                            <span class="number">1</span>
-                            <button class="increment" id="increment">+</button>
-                        </div>       
-                    </div>
-                    <div class="final-price">
-                        Tk. 1700
-                    </div>
-                    <div class="remove-product">
-                        <i onclick="removeCart(this)" class="ri-delete-bin-line cart-remove"></i>
-                    </div>
-                </div> -->
+                <!-- Cart item Dynamically Added Here -->
             </div>
             <!-- Right Area -->
             <div class="carts-total">
@@ -502,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Tk. ${item.price * item.quantity}
                     </div>
                     <div class="remove-product">
-                        <i onclick="removeCart(this)" class="ri-delete-bin-line cart-remove"></i>
+                        <i onclick="removeViewCart(this)" class="ri-delete-bin-line cart-remove"></i>
                     </div>
                 `;
                 subtotal += item.price * item.quantity;
@@ -575,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        function removeCart(button) {
+        function removeViewCart(button) {
             const cartBox = button.closest('.cart-item');
             const productId = cartBox.querySelector('.cart-box').getAttribute('id');
 
