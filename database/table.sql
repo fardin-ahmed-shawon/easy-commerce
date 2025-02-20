@@ -24,7 +24,7 @@ CREATE TABLE main_category (
 
 CREATE TABLE sub_category (
     sub_ctg_id INT PRIMARY KEY AUTO_INCREMENT,
-    sub_ctg_name VARCHAR(100) NOT NULL,
+    sub_ctg_name VARCHAR(100) UNIQUE NOT NULL,
     main_ctg_name VARCHAR(100) NOT NULL,
     FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE
 );
@@ -33,8 +33,8 @@ CREATE TABLE product_info (
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_title VARCHAR(255) NOT NULL,
     product_price INT NOT NULL,
-    product_main_ctg_name VARCHAR(100) NOT NULL,
-    product_sub_ctg_name VARCHAR(100) NOT NULL,
+    main_ctg_name VARCHAR(100) NOT NULL,
+    sub_ctg_name VARCHAR(100) NOT NULL,
     available_stock INT NOT NULL,
     size_option VARCHAR(50),
     product_keyword VARCHAR(255),
@@ -42,7 +42,9 @@ CREATE TABLE product_info (
     product_img1 VARCHAR(255),
     product_img2 VARCHAR(255),
     product_img3 VARCHAR(255),
-    product_img4 VARCHAR(255)
+    product_img4 VARCHAR(255),
+    FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE,
+    FOREIGN KEY (sub_ctg_name) REFERENCES sub_category(sub_ctg_name) ON DELETE CASCADE
 );
 
 CREATE TABLE order_info (
