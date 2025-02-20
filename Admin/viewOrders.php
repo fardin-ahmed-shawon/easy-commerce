@@ -253,20 +253,24 @@ include('database/dbConnection.php');
                         echo "";
                         while($row = $result->fetch_assoc()) {
                           if ($row["order_status"] != 'Pending') {
-                            echo '<tr>
-                                  <td>' . $row["order_no"] . '</td>
-                                  <td>' . $row["user_id"] . '</td>
-                                  <td>' . $row["user_address"] . '</td>
-                                  <td>' . $row["invoice_no"] . '</td>
-                                  <td>' . $row["product_id"] . '</td>
-                                  <td>' . $row["product_size"] . '</td>
-                                  <td>' . $row["product_quantity"] . '</td>
-                                  <td>' . $row["total_price"] . ' Tk</td>
-                                  <td>' . $row["order_date"] . '</td>
-                                  <td>' . $row["payment_method"] . '</td>
-                                  <td class="text-success">' . $row["order_status"] . '</td>
-                                  <td><button class="btn btn-danger">Delete</button></td>
-                                </tr>';
+                            echo "<tr>
+                                  <td>$row[order_no]</td>
+                                  <td>$row[user_id]</td>
+                                  <td>$row[user_address]</td>
+                                  <td>$row[invoice_no]</td>
+                                  <td>$row[product_id]</td>
+                                  <td>$row[product_size]</td>
+                                  <td>$row[product_quantity]</td>
+                                  <td>$row[total_price] Tk</td>
+                                  <td>$row[order_date]</td>
+                                  <td>$row[payment_method]</td>
+                                  <td class='text-success'>$row[order_status]</td>
+                                  <td>
+                                    <a href='deleteOrder.php? o_n=$row[order_no]'>
+                                      <button class='btn btn-danger' onclick='return checkDelete()'>Delete</button>
+                                    </a>
+                                  </td>
+                                </tr>";
                           }
                         }
                       }
@@ -303,6 +307,12 @@ include('database/dbConnection.php');
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
+
+    <script>
+      function checkDelete() {
+        return confirm('Are you sure you want to delete this data?');
+      }
+    </script>
 
 
   </body>
