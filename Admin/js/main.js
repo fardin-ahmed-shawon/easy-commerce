@@ -27,11 +27,7 @@ document.querySelectorAll('tr .payment-status').forEach(function(status_text) {
   });
 
 
-//
-// paid-btn
-// cancel-btn
-// let paid_btn = document.querySelector('.paid-btn');
-
+// Payment Page
 document.querySelectorAll('tr').forEach(function(row) {
     var orderStatus = row.querySelector('.order-status');
     if (orderStatus && orderStatus.innerHTML == 'Canceled') {
@@ -56,3 +52,6 @@ document.querySelectorAll('tr').forEach(function(row) {
         }
     }
 });
+
+
+// Invoice Page
