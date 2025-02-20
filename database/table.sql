@@ -25,8 +25,8 @@ CREATE TABLE main_category (
 CREATE TABLE sub_category (
     sub_ctg_id INT PRIMARY KEY AUTO_INCREMENT,
     sub_ctg_name VARCHAR(100) NOT NULL,
-    main_ctg_name VARCHAR(100) NOT NULL
-    FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE,
+    main_ctg_name VARCHAR(100) NOT NULL,
+    FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE
 );
 
 CREATE TABLE product_info (

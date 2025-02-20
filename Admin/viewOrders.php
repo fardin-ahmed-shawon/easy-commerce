@@ -24,7 +24,11 @@ include('database/dbConnection.php');
 
     <!-- Custom CSS-->
     <link rel="stylesheet" href="css/style.css">
-
+    <style>
+      .status {
+        color: #1bcfb4;
+      }
+    </style>
   </head>
   <body>
     <div class="container-scroller">
@@ -264,7 +268,7 @@ include('database/dbConnection.php');
                                   <td>$row[total_price] Tk</td>
                                   <td>$row[order_date]</td>
                                   <td>$row[payment_method]</td>
-                                  <td class='text-success'>$row[order_status]</td>
+                                  <td class='order-status'>$row[order_status]</td>
                                   <td>
                                     <a href='deleteOrder.php? o_n=$row[order_no]'>
                                       <button class='btn btn-danger' onclick='return checkDelete()'>Delete</button>
@@ -307,6 +311,7 @@ include('database/dbConnection.php');
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
+    <script src="js/main.js"></script>
 
     <script>
       function checkDelete() {

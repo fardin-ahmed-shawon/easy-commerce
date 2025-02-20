@@ -487,9 +487,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["mark_canceled_both"]))
                                     $count++;
                                   }
                               }
-                          } else {
-                              echo "0 results";
-                          }
+                          } 
                         ?>
 
                         <!-- <tr>

@@ -284,7 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                                 <td>$row[total_price] Tk</td>
                                 <td>$row[order_date]</td>
                                 <td>$row[payment_method]</td>
-                                <td class='text-success'>$row[order_status]</td>
+                                <td class='text-primary'>$row[order_status]</td>
                                 <td>
                                   <form method='post' action=''>
                                     <input type='hidden' name='order_no' value='$row[order_no]'>

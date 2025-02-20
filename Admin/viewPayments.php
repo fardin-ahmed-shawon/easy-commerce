@@ -303,20 +303,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mark_cancel'])) {
                                   echo "<td>" . $row["serial_no"] . "</td>";
                                   echo "<td>" . $row["invoice_no"] . "</td>";
                                   echo "<td>" . $row["order_no"] . "</td>";
-                                  echo "<td class='text-success'>" . $row["order_status"] . "</td>";
+                                  echo "<td class='order-status'>" . $row["order_status"] . "</td>";
                                   echo "<td>" . $row["payment_method"] . "</td>";
                                   echo "<td>" . $row["acc_number"] . "</td>";
                                   echo "<td>" . $row["transaction_id"] . "</td>";
                                   echo "<td>" . $row["payment_date"] . "</td>";
-                                  echo "<td class='text-success'>" . $row["payment_status"] . "</td>";
-                                  echo '<td>
+                                  echo "<td class='payment-status'>" . $row["payment_status"] . "</td>";
+                                  echo '<td class="paid-btn">
                                           <form method="post" action="">
                                             <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                             <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
                                             <button type="submit" name="mark_paid" class="btn btn-dark">Mark As Paid</button>
                                           </form>
                                         </td>';
-                                  echo '<td>
+                                  echo '<td class="cancel-btn">
                                           <form method="post" action="">
                                             <input type="hidden" name="order_no" value="' . $row["order_no"] . '">
                                             <input type="hidden" name="invoice_no" value="' . $row["invoice_no"] . '">
@@ -432,6 +432,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mark_cancel'])) {
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
+    <script src="js/main.js"></script>
 
 
   </body>
