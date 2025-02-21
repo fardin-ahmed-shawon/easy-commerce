@@ -498,6 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = mysqli_fetch_assoc($result);
         if (password_verify($password, $user['user_password'])) {
             // Set value
+            $_SESSION['id'] = $user['user_id'];
             $_SESSION['firstname'] = $user['user_fName'];
             $_SESSION['lastname'] = $user['user_lName'];
             $_SESSION['phone'] = $user['user_phone'];

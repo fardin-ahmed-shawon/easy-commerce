@@ -55,6 +55,7 @@ CREATE TABLE order_info (
     user_phone VARCHAR(20) NOT NULL,
     user_email VARCHAR(100) NOT NULL,
     user_address TEXT NOT NULL,
+    city_address VARCHAR(50) NOT NULL,
     invoice_no VARCHAR(50) NOT NULL,
     product_id INT NOT NULL,
     product_title VARCHAR(255) NOT NULL,

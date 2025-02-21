@@ -1,8 +1,67 @@
 <?php
+error_reporting(E_ALL);
 session_start();
 if (!isset($_SESSION['phone'])) {
     header("Location: login.php");
     exit();
+}
+// database connection
+include 'database/dbConnection.php';
+
+// Insertion
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve form data
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $payment_method = $_POST['payment_method'];
+    $accNum = $_POST['accNum'] ?? null;
+    $transactionID = $_POST['TransactionID'] ?? null;
+
+    // Assuming you have user_id and product details in session or retrieved from the database
+    $user_id = $_SESSION['id'];
+
+    // $product_id = $_SESSION['product_id'];
+    // $product_title = $_SESSION['product_title'];
+    // $product_quantity = $_SESSION['product_quantity'];
+    // $product_size = $_SESSION['product_size'];
+    // $total_price = $_SESSION['total_price'];
+
+    $product_id = 1;
+    $product_title = "Default";
+    $product_quantity = 2;
+    $product_size = "Default";
+    $total_price = 1000;
+
+    // $invoice_no = uniqid('INV-');
+    // Generate a unique invoice number
+    function generateInvoiceNo() {
+        // Get the current timestamp in microseconds
+        $timestamp = microtime(true) * 10000; // More digits by multiplying
+        // Convert timestamp to a unique string
+        $uniqueString = 'INV-' . strtoupper(base_convert($timestamp, 10, 36));
+        return $uniqueString;
+    }
+
+    $invoice_no = generateInvoiceNo();
+    
+    // Insert data into order_info table
+    $sql = "INSERT INTO order_info (user_id, user_first_name, user_last_name, user_phone, user_email, user_address, city_address, invoice_no, product_id, product_title, product_quantity, product_size, total_price, payment_method)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
+
+    if ($stmt->execute()) {
+        echo "Order placed successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
 
@@ -277,7 +336,7 @@ if (!isset($_SESSION['phone'])) {
         <h1 class="text-center">Checkout</h1><hr><br>
         <br>
         <!-- Checkout Form -->
-        <form action="#">
+        <form action="" method="post" enctype="multipart/form-data">
             <div class="checkout-container">
                 <!-- left area -->
                 <div class="checkout">
@@ -310,7 +369,7 @@ if (!isset($_SESSION['phone'])) {
                                 <span class="details">Address<i class="text-danger">*</i></span>
                                 <input name="address" type="text" placeholder="Enter your address" required>
                             </div><br>
-                            <!-- Input for town -->
+                            <!-- Input for city -->
                             <div class="radio-input-box">
                                 <span class="details">Choose Your Delivery Location</span>
                                 <input name="city" type="radio" id="dhaka" value="Inside Dhaka" checked>
@@ -699,8 +758,7 @@ if (!isset($_SESSION['phone'])) {
         myFunction();
     }
 
-
-// Cart item show from the Local Storage
+    // Cart item show from the Local Storage
         document.addEventListener('DOMContentLoaded', () => {
             const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
             const orderItemsContainer = document.getElementById('order-items');
@@ -838,8 +896,7 @@ if (!isset($_SESSION['phone'])) {
             });
 
         });
-        
-
+    
 </script>
 
 </body>
