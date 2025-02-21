@@ -18,17 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = $_POST['address'];
     $city = $_POST['city'];
     $payment_method = $_POST['payment_method'];
-    $accNum = $_POST['accNum'] ?? null;
-    $transactionID = $_POST['TransactionID'] ?? null;
+    $accNums = $_POST['accNum'];
+    $transactionIDs = $_POST['TransactionID'];
 
-    // Assuming you have user_id and product details in session or retrieved from the database
+    // Assuming you have user_id in session
     $user_id = $_SESSION['id'];
-
-    // $product_id = $_SESSION['product_id'];
-    // $product_title = $_SESSION['product_title'];
-    // $product_quantity = $_SESSION['product_quantity'];
-    // $product_size = $_SESSION['product_size'];
-    // $total_price = $_SESSION['total_price'];
 
     $product_id = 1;
     $product_title = "Default";
@@ -36,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $product_size = "Default";
     $total_price = 1000;
 
-    // $invoice_no = uniqid('INV-');
     // Generate a unique invoice number
     function generateInvoiceNo() {
         // Get the current timestamp in microseconds
@@ -55,7 +48,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
 
     if ($stmt->execute()) {
-        echo "Order placed successfully!";
+        // Get the last inserted order number
+        $order_no = $conn->insert_id;
+
+        // Validate and process each accNum and TransactionID
+        foreach ($accNums as $index => $accNum) {
+            $transactionID = $transactionIDs[$index];
+            if (!empty($accNum) && !empty($transactionID)) {
+                // Insert data into payment_info table
+                $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
+                VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
+                $stmt_payment = $conn->prepare($sql_payment);
+                $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+                $stmt_payment->execute();
+            }
+        }
+
+        echo "Order and payment info placed successfully!";
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -63,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -433,6 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <br>
                                 <!-- Accordian Start -->
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <!-- item 1-->
                                     <div class="accordion-item">
                                     <h2 class="accordion-header" id="flush-headingOne">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="document.getElementById('bKash').checked = true;">
@@ -461,12 +472,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <!-- Input -->
                                             <div class="input-box">
                                                 <label for="t_num">Your bKash Account Number</label>
-                                                <input name="accNum" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
+                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
                                             </div>
                                             <br>
                                             <div class="input-box">
                                                 <label for="t_id">Your bKash Transaction ID</label>
-                                                <input name="TransactionID" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
                                             </div>
                                         </div>
                                     </div>
@@ -499,12 +510,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <!-- Input -->
                                             <div class="input-box">
                                                 <label for="t_num">Your Nagad Account Number</label>
-                                                <input name="accNum" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
+                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
                                             </div>
                                             <br>
                                             <div class="input-box">
                                                 <label for="t_id">Your Nagad Transaction ID</label>
-                                                <input name="TransactionID" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
                                             </div>
                                         </div>
                                     </div>
@@ -537,12 +548,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <!-- Input -->
                                             <div class="input-box">
                                                 <label for="t_num">Your Rocket Account Number</label>
-                                                <input name="accNum" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
+                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
                                             </div>
                                             <br>
                                             <div class="input-box">
                                                 <label for="t_id">Your Rocket Transaction ID</label>
-                                                <input name="TransactionID" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
                                             </div>
                                         </div>
                                     </div>
@@ -575,12 +586,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <!-- Input -->
                                                 <div class="input-box">
                                                     <label for="t_num">Your Upay Account Number</label>
-                                                    <input name="accNum" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
+                                                    <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
                                                 </div>
                                                 <br>
                                                 <div class="input-box">
                                                     <label for="t_id">Your Upay Transaction ID</label>
-                                                    <input name="TransactionID" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                                    <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
                                                 </div>
                                             </div>
                                         </div>

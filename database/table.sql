@@ -60,7 +60,7 @@ CREATE TABLE order_info (
     product_id INT NOT NULL,
     product_title VARCHAR(255) NOT NULL,
     product_quantity INT NOT NULL,
-    product_size VARCHAR(50),
+    product_size VARCHAR(50) DEFAULT 'Default',
     total_price INT NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
     order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
