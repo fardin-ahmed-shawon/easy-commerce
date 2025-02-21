@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = $_POST['address'];
     $city = $_POST['city'];
     $payment_method = $_POST['payment_method'];
-    $accNums = $_POST['accNum'];
-    $transactionIDs = $_POST['TransactionID'];
+    $accNum = $_POST['accNum'];
+    $transactionID = $_POST['transactionID'];
 
     // Assuming you have user_id in session
     $user_id = $_SESSION['id'];
@@ -51,18 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Get the last inserted order number
         $order_no = $conn->insert_id;
 
-        // Validate and process each accNum and TransactionID
-        foreach ($accNums as $index => $accNum) {
-            $transactionID = $transactionIDs[$index];
-            if (!empty($accNum) && !empty($transactionID)) {
-                // Insert data into payment_info table
-                $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
-                VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
-                $stmt_payment = $conn->prepare($sql_payment);
-                $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
-                $stmt_payment->execute();
-            }
-        }
+        // Insert data into payment_info table
+        $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
+        VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
+        $stmt_payment = $conn->prepare($sql_payment);
+        $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+
+        $stmt_payment->execute();
+        $stmt_payment->close();
 
         echo "Order and payment info placed successfully!";
     } else {
@@ -445,118 +441,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <!-- item 1-->
                                     <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingOne">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="document.getElementById('bKash').checked = true;">
-                                            <div class="radio-input-box">
-                                                <input name="payment_method" type="radio" id="bKash" value="bKash">
-                                                <label for="bKash">bKash</label>
-                                            </div>
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">
-                                            <div class="payment-instructions">
-                                                <p>1. Go to your bKash app or dial *247#</p>
-                                                <p>2. Choose "Send Money"</p>
-                                                <p>3. Enter below bKash Account Number</p>
-                                                <p>4. Enter total amout</p>
-                                                <p>5. Now enter your bKash Account PIN to confirm the transaction</p>
-                                                <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
+                                        <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="document.getElementById('bKash').checked = true;">
+                                                <div class="radio-input-box">
+                                                    <input name="payment_method" type="radio" id="bKash" value="bKash">
+                                                    <label for="bKash">bKash</label>
+                                                </div>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <div class="payment-instructions">
+                                                    <p>1. Go to your bKash app or dial *247#</p>
+                                                    <p>2. Choose "Send Money"</p>
+                                                    <p>3. Enter below bKash Account Number</p>
+                                                    <p>4. Enter total amout</p>
+                                                    <p>5. Now enter your bKash Account PIN to confirm the transaction</p>
+                                                    <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
+                                                    <br>
+                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <br>
+                                                    <p>Account Type: <span class="text-danger">Personal</span></p>
+                                                    <p>Account Number: <span class="text-danger">01944667441</span></p>
+                                                </div>
                                                 <br>
-                                                <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
-                                                <br>
-                                                <p>Account Type: <span class="text-danger">Personal</span></p>
-                                                <p>Account Number: <span class="text-danger">01944667441</span></p>
-                                            </div>
-                                            <br>
-                                            <!-- Input -->
-                                            <div class="input-box">
-                                                <label for="t_num">Your bKash Account Number</label>
-                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
-                                            </div>
-                                            <br>
-                                            <div class="input-box">
-                                                <label for="t_id">Your bKash Transaction ID</label>
-                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                                <!-- Input -->
+                                                <div class="input-area" id="bkash-input-area"></div>
                                             </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <!-- item 2 -->
                                     <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingTwo">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" onclick="document.getElementById('nagad').checked = true;">
-                                            <div class="radio-input-box">
-                                                <input name="payment_method" type="radio" id="nagad" value="Nagad">
-                                                <label for="nagad">Nagad</label>
-                                            </div>
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">
-                                            <div class="payment-instructions">
-                                                <p>1. Go to your Nagad app or dial *XXX#</p>
-                                                <p>2. Choose "Send Money"</p>
-                                                <p>3. Enter below Nagad Account Number</p>
-                                                <p>4. Enter total amout</p>
-                                                <p>5. Now enter your Nagad Account PIN to confirm the transaction</p>
-                                                <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
-                                                <br>
-                                                <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
-                                                <br>
-                                                <p>Account Type: <span class="text-danger">Personal</span></p>
-                                                <p>Account Number: <span class="text-danger">01944667441</span></p>
-                                            </div><br>
-                                            <!-- Input -->
-                                            <div class="input-box">
-                                                <label for="t_num">Your Nagad Account Number</label>
-                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
-                                            </div>
-                                            <br>
-                                            <div class="input-box">
-                                                <label for="t_id">Your Nagad Transaction ID</label>
-                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                        <h2 class="accordion-header" id="flush-headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" onclick="document.getElementById('nagad').checked = true;">
+                                                <div class="radio-input-box">
+                                                    <input name="payment_method" type="radio" id="nagad" value="Nagad">
+                                                    <label for="nagad">Nagad</label>
+                                                </div>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <div class="payment-instructions">
+                                                    <p>1. Go to your Nagad app or dial *XXX#</p>
+                                                    <p>2. Choose "Send Money"</p>
+                                                    <p>3. Enter below Nagad Account Number</p>
+                                                    <p>4. Enter total amout</p>
+                                                    <p>5. Now enter your Nagad Account PIN to confirm the transaction</p>
+                                                    <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
+                                                    <br>
+                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <br>
+                                                    <p>Account Type: <span class="text-danger">Personal</span></p>
+                                                    <p>Account Number: <span class="text-danger">01944667441</span></p>
+                                                </div><br>
+                                                <!-- Input -->
+                                                <div class="input-area" id="nagad-input-area"></div>
                                             </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <!-- item 3 -->
                                     <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingThree">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree" onclick="document.getElementById('rocket').checked = true;">
-                                            <div class="radio-input-box">
-                                                <input name="payment_method" type="radio" id="rocket" value="Rocket">
-                                                <label for="rocket">Rocket</label>
-                                            </div>
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">
-                                            <div class="payment-instructions">
-                                                <p>1. Go to your Rocket app or dial *XXX#</p>
-                                                <p>2. Choose "Send Money"</p>
-                                                <p>3. Enter below Rocket Account Number</p>
-                                                <p>4. Enter total amout</p>
-                                                <p>5. Now enter your Rocket Account PIN to confirm the transaction</p>
-                                                <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
-                                                <br>
-                                                <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
-                                                <br>
-                                                <p>Account Type: <span class="text-danger">Personal</span></p>
-                                                <p>Account Number: <span class="text-danger">01944667441</span></p>
-                                            </div><br>
-                                            <!-- Input -->
-                                            <div class="input-box">
-                                                <label for="t_num">Your Rocket Account Number</label>
-                                                <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
-                                            </div>
-                                            <br>
-                                            <div class="input-box">
-                                                <label for="t_id">Your Rocket Transaction ID</label>
-                                                <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
+                                        <h2 class="accordion-header" id="flush-headingThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree" onclick="document.getElementById('rocket').checked = true;">
+                                                <div class="radio-input-box">
+                                                    <input name="payment_method" type="radio" id="rocket" value="Rocket">
+                                                    <label for="rocket">Rocket</label>
+                                                </div>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <div class="payment-instructions">
+                                                    <p>1. Go to your Rocket app or dial *XXX#</p>
+                                                    <p>2. Choose "Send Money"</p>
+                                                    <p>3. Enter below Rocket Account Number</p>
+                                                    <p>4. Enter total amout</p>
+                                                    <p>5. Now enter your Rocket Account PIN to confirm the transaction</p>
+                                                    <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
+                                                    <br>
+                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <br>
+                                                    <p>Account Type: <span class="text-danger">Personal</span></p>
+                                                    <p>Account Number: <span class="text-danger">01944667441</span></p>
+                                                </div><br>
+                                                <!-- Input -->
+                                                <div class="input-area" id="rocket-input-area"></div>
                                             </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <!-- item 4 -->
                                     <div class="accordion-item">
@@ -584,15 +556,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <p>Account Number: <span class="text-danger">01944667441</span></p>
                                                 </div><br>
                                                 <!-- Input -->
-                                                <div class="input-box">
-                                                    <label for="t_num">Your Upay Account Number</label>
-                                                    <input name="accNum[]" class="form-control" id="t_num" type="text" placeholder="01XXXXXXXXX">
-                                                </div>
-                                                <br>
-                                                <div class="input-box">
-                                                    <label for="t_id">Your Upay Transaction ID</label>
-                                                    <input name="TransactionID[]" class="form-control" id="t_id" type="text" placeholder="Enter Transaction ID">
-                                                </div>
+                                                <div class="input-area" id="upay-input-area"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -887,27 +851,208 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 totalPriceContainer.textContent = `Tk. ${newSubtotal + shipping}`;
             }
 
-            // Payment Option Selection
-            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
-            paymentMethods.forEach(method => {
-                method.addEventListener('change', () => {
-                    // Clear required attribute from all input fields
-                    document.querySelectorAll('.input-box input').forEach(input => {
-                        input.removeAttribute('required');
-                    });
-
-                    // Set required attribute for the selected payment method's input fields
-                    if (method.checked) {
-                        const methodId = method.id;
-                        document.querySelectorAll(`#${methodId}_num, #${methodId}_id`).forEach(input => {
-                            input.setAttribute('required', 'required');
-                        });
-                    }
-                });
-            });
-
         });
     
+
+// Handle bKash input area-------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    const bkashRadio = document.getElementById('bKash');
+    const bkashInputArea = document.getElementById('bkash-input-area');
+    const bkashAccordionButton = document.querySelector('[data-bs-target="#flush-collapseOne"]');
+    const bkashAccordion = document.getElementById('flush-collapseOne');
+
+    bkashRadio.addEventListener('change', function () {
+        if (bkashRadio.checked) {
+            bkashInputArea.innerHTML = `
+                <div class="input-box">
+                    <label for="t_num">Your bKash Account Number</label>
+                    <input name="accNum" class="form-control" id="bKash_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                </div>
+                <br>
+                <div class="input-box">
+                    <label for="t_id">Your bKash Transaction ID</label>
+                    <input name="transactionID" class="form-control" id="bKash_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                </div>
+            `;
+        } else {
+            bkashInputArea.innerHTML = '';
+        }
+    });
+
+    // Handle accordion button click
+    bkashAccordionButton.addEventListener('click', function () {
+        bkashRadio.checked = true;
+        bkashRadio.dispatchEvent(new Event('change'));
+    });
+
+    // Handle accordion collapse event
+    bkashAccordion.addEventListener('hidden.bs.collapse', function () {
+        bkashInputArea.innerHTML = '';
+    });
+
+    // Handle deselection of other radio buttons
+    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#bkash)');
+    otherRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (!bkashRadio.checked) {
+                bkashInputArea.innerHTML = '';
+            }
+        });
+    });
+});
+//-------------------------------------------------------------------------------------------------------------------
+
+
+// Handle Nagad input area--------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle Nagad input area
+    const nagadRadio = document.getElementById('nagad');
+    const nagadInputArea = document.getElementById('nagad-input-area');
+    const nagadAccordionButton = document.querySelector('[data-bs-target="#flush-collapseTwo"]');
+    const nagadAccordion = document.getElementById('flush-collapseTwo');
+
+    nagadRadio.addEventListener('change', function () {
+        if (nagadRadio.checked) {
+            nagadInputArea.innerHTML = `
+                <div class="input-box">
+                    <label for="nagad_accNum">Your Nagad Account Number</label>
+                    <input name="accNum" class="form-control" id="nagad_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                </div>
+                <br>
+                <div class="input-box">
+                    <label for="nagad_transactionID">Your Nagad Transaction ID</label>
+                    <input name="transactionID" class="form-control" id="nagad_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                </div>
+            `;
+        } else {
+            nagadInputArea.innerHTML = '';
+        }
+    });
+
+    // Handle accordion button click
+    nagadAccordionButton.addEventListener('click', function () {
+        nagadRadio.checked = true;
+        nagadRadio.dispatchEvent(new Event('change'));
+    });
+
+    // Handle accordion collapse event
+    nagadAccordion.addEventListener('hidden.bs.collapse', function () {
+        nagadInputArea.innerHTML = '';
+    });
+
+    // Handle deselection of other radio buttons
+    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#nagad)');
+    otherRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (!nagadRadio.checked) {
+                nagadInputArea.innerHTML = '';
+            }
+        });
+    });
+});
+//-------------------------------------------------------------------------------------------------------------------
+
+
+// Handle Rocket input area------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle Rocket input area
+    const rocketRadio = document.getElementById('rocket');
+    const rocketInputArea = document.getElementById('rocket-input-area');
+    const rocketAccordionButton = document.querySelector('[data-bs-target="#flush-collapseThree"]');
+    const rocketAccordion = document.getElementById('flush-collapseThree');
+
+    rocketRadio.addEventListener('change', function () {
+        if (rocketRadio.checked) {
+            rocketInputArea.innerHTML = `
+                <div class="input-box">
+                    <label for="rocket_accNum">Your Rocket Account Number</label>
+                    <input name="accNum" class="form-control" id="rocket_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                </div>
+                <br>
+                <div class="input-box">
+                    <label for="rocket_transactionID">Your Rocket Transaction ID</label>
+                    <input name="transactionID" class="form-control" id="rocket_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                </div>
+            `;
+        } else {
+            rocketInputArea.innerHTML = '';
+        }
+    });
+
+    // Handle accordion button click
+    rocketAccordionButton.addEventListener('click', function () {
+        rocketRadio.checked = true;
+        rocketRadio.dispatchEvent(new Event('change'));
+    });
+
+    // Handle accordion collapse event
+    rocketAccordion.addEventListener('hidden.bs.collapse', function () {
+        rocketInputArea.innerHTML = '';
+    });
+
+    // Handle deselection of other radio buttons
+    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#rocket)');
+    otherRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (!rocketRadio.checked) {
+                rocketInputArea.innerHTML = '';
+            }
+        });
+    });
+});
+//--------------------------------------------------------------------------------------------------------------------
+
+
+// Handle Upay input area--------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle Upay input area
+    const upayRadio = document.getElementById('upay');
+    const upayInputArea = document.getElementById('upay-input-area');
+    const upayAccordionButton = document.querySelector('[data-bs-target="#flush-collapseFour"]');
+    const upayAccordion = document.getElementById('flush-collapseFour');
+
+    upayRadio.addEventListener('change', function () {
+        if (upayRadio.checked) {
+            upayInputArea.innerHTML = `
+                <div class="input-box">
+                    <label for="upay_accNum">Your Upay Account Number</label>
+                    <input name="accNum" class="form-control" id="upay_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                </div>
+                <br>
+                <div class="input-box">
+                    <label for="upay_transactionID">Your Upay Transaction ID</label>
+                    <input name="transactionID" class="form-control" id="upay_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                </div>
+            `;
+        } else {
+            upayInputArea.innerHTML = '';
+        }
+    });
+
+    // Handle accordion button click
+    upayAccordionButton.addEventListener('click', function () {
+        upayRadio.checked = true;
+        upayRadio.dispatchEvent(new Event('change'));
+    });
+
+    // Handle accordion collapse event
+    upayAccordion.addEventListener('hidden.bs.collapse', function () {
+        upayInputArea.innerHTML = '';
+    });
+
+    // Handle deselection of other radio buttons
+    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#upay)');
+    otherRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (!upayRadio.checked) {
+                upayInputArea.innerHTML = '';
+            }
+        });
+    });
+});
+//-------------------------------------------------------------------------------------------------------------------
+
+
 </script>
 
 </body>
