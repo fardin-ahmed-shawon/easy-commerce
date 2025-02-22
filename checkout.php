@@ -8,6 +8,7 @@ if (!isset($_SESSION['phone'])) {
 // database connection
 include 'database/dbConnection.php';
 
+error_reporting(0);
 // Insertion
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
@@ -18,10 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = $_POST['address'];
     $city = $_POST['city'];
     $payment_method = $_POST['payment_method'];
+    $accNum = $_POST['accNum'];
+    $transactionID = $_POST['transactionID'];
 
     // Assuming you have user_id in session
     $user_id = $_SESSION['id'];
 
+    // Product details
     $product_id = 1;
     $product_title = "Default";
     $product_quantity = 2;
@@ -38,45 +42,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $invoice_no = generateInvoiceNo();
-    
-    // Insert data into order_info table
-    $sql = "INSERT INTO order_info (user_id, user_first_name, user_last_name, user_phone, user_email, user_address, city_address, invoice_no, product_id, product_title, product_quantity, product_size, total_price, payment_method)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
 
-    if ($stmt->execute()) {
-        if ($payment_method != "Cash On Delivery") {
-            // Get the last inserted order number
-            $order_no = $conn->insert_id;
-
-            // Retrive payment information
-            $accNum = $_POST['accNum'];
-            $transactionID = $_POST['transactionID'];
-
-            // if ($accNum == ""|| $transactionID == "") {
-            //     exit("Please provide both account number and transaction ID");
-            // }
-
-            // Insert data into payment_info table
-            $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
-            VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
-            $stmt_payment = $conn->prepare($sql_payment);
-            $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
-
-            $stmt_payment->execute();
-            $stmt_payment->close();
-
-            echo "Order and payment info placed successfully!";
-        }
+    if ($payment_method != "Cash On Delivery" && ($accNum == ""|| $transactionID == "")) {
+        ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let msg_box = document.getElementById("msg");
+                if (msg_box) {
+                    msg_box.style.display = "block";
+                    msg_box.innerText = "Please Provide both Account Number and Transaction ID!";
+                    setTimeout(() => {
+                        msg_box.style.display = "none";
+                    }, 3000);
+                }
+            });
+        </script>
+        <?php
     } else {
-        echo "Error: " . $stmt->error;
-    }
+        // Insert data into order_info table
+        $sql = "INSERT INTO order_info (user_id, user_first_name, user_last_name, user_phone, user_email, user_address, city_address, invoice_no, product_id, product_title, product_quantity, product_size, total_price, payment_method)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
 
-    $stmt->close();
+        if ($stmt->execute()) {
+            if ($payment_method != "Cash On Delivery") {
+                // Get the last inserted order number
+                $order_no = $conn->insert_id;
+
+                // Insert data into payment_info table
+                $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
+                VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
+                $stmt_payment = $conn->prepare($sql_payment);
+                $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+
+                $stmt_payment->execute();
+                $stmt_payment->close();
+                
+            }
+            ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        let success_msg = document.getElementById("success-msg");
+                        if (success_msg) {
+                            success_msg.style.display = "block";
+                            success_msg.innerText = "Order Placed Successfully!";
+                            setTimeout(() => {
+                                success_msg.style.display = "none";
+                                window.location.href = "index.php";
+                                // Clear the product list after placing the orde
+                                localStorage.clear();
+                            }, 2000);
+                        }
+                    });
+                </script>
+            <?php
+        } else {
+            // $msg = "Error: " . $stmt->error;
+            $err_msg = "Order Not Placed!";
+        }
+        $stmt->close();
+    }
     $conn->close();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -119,6 +147,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-weight: 500;
             margin-bottom: 5px;
         }
+        #msg {
+            font-size: 25px;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-bottom: 3px solid #9c202c;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            display: none;
+        }
+        #success-msg {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            font-size: 25px;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            border-bottom: 3px solid #0f5132;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            display: none;
+        }
     </style>
 
 </head>
@@ -127,6 +185,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!--==================================-->
 <!--========== START NAVBAR ==========-->
 <!--==================================-->
+<div id="msg"></div>
+<div id="success-msg"></div>
 <nav id="home">
     <div class="container">
         <!-- Middle -->
@@ -874,12 +934,12 @@ document.addEventListener('DOMContentLoaded', function () {
             bkashInputArea.innerHTML = `
                 <div class="input-box">
                     <label for="t_num">Your bKash Account Number</label>
-                    <input name="accNum" class="form-control" id="bKash_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                    <input name="accNum" class="form-control" id="bKash_accNum" type="text" placeholder="01XXXXXXXXX">
                 </div>
                 <br>
                 <div class="input-box">
                     <label for="t_id">Your bKash Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="bKash_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                    <input name="transactionID" class="form-control" id="bKash_transactionID" type="text" placeholder="Enter Transaction ID">
                 </div>
             `;
         } else {
@@ -918,12 +978,12 @@ document.addEventListener('DOMContentLoaded', function () {
             nagadInputArea.innerHTML = `
                 <div class="input-box">
                     <label for="nagad_accNum">Your Nagad Account Number</label>
-                    <input name="accNum" class="form-control" id="nagad_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                    <input name="accNum" class="form-control" id="nagad_accNum" type="text" placeholder="01XXXXXXXXX">
                 </div>
                 <br>
                 <div class="input-box">
                     <label for="nagad_transactionID">Your Nagad Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="nagad_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                    <input name="transactionID" class="form-control" id="nagad_transactionID" type="text" placeholder="Enter Transaction ID">
                 </div>
             `;
         } else {
@@ -962,12 +1022,12 @@ document.addEventListener('DOMContentLoaded', function () {
             rocketInputArea.innerHTML = `
                 <div class="input-box">
                     <label for="rocket_accNum">Your Rocket Account Number</label>
-                    <input name="accNum" class="form-control" id="rocket_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                    <input name="accNum" class="form-control" id="rocket_accNum" type="text" placeholder="01XXXXXXXXX">
                 </div>
                 <br>
                 <div class="input-box">
                     <label for="rocket_transactionID">Your Rocket Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="rocket_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                    <input name="transactionID" class="form-control" id="rocket_transactionID" type="text" placeholder="Enter Transaction ID">
                 </div>
             `;
         } else {
@@ -1006,12 +1066,12 @@ document.addEventListener('DOMContentLoaded', function () {
             upayInputArea.innerHTML = `
                 <div class="input-box">
                     <label for="upay_accNum">Your Upay Account Number</label>
-                    <input name="accNum" class="form-control" id="upay_accNum" type="text" placeholder="01XXXXXXXXX" required>
+                    <input name="accNum" class="form-control" id="upay_accNum" type="text" placeholder="01XXXXXXXXX">
                 </div>
                 <br>
                 <div class="input-box">
                     <label for="upay_transactionID">Your Upay Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="upay_transactionID" type="text" placeholder="Enter Transaction ID" required>
+                    <input name="transactionID" class="form-control" id="upay_transactionID" type="text" placeholder="Enter Transaction ID">
                 </div>
             `;
         } else {
