@@ -885,16 +885,11 @@ document.addEventListener('DOMContentLoaded', function () {
         bkashRadio.dispatchEvent(new Event('change'));
     });
 
-    // Handle accordion collapse event
-    bkashAccordion.addEventListener('hidden.bs.collapse', function () {
-        bkashInputArea.innerHTML = '';
-    });
-
-    // Handle deselection of other radio buttons
-    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#bkash)');
-    otherRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (!bkashRadio.checked) {
+    // Handle other accordions opening
+    const allAccordions = document.querySelectorAll('.accordion-collapse');
+    allAccordions.forEach(accordion => {
+        accordion.addEventListener('show.bs.collapse', function () {
+            if (accordion !== bkashAccordion) {
                 bkashInputArea.innerHTML = '';
             }
         });
@@ -905,7 +900,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Handle Nagad input area--------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle Nagad input area
     const nagadRadio = document.getElementById('nagad');
     const nagadInputArea = document.getElementById('nagad-input-area');
     const nagadAccordionButton = document.querySelector('[data-bs-target="#flush-collapseTwo"]');
@@ -935,16 +929,11 @@ document.addEventListener('DOMContentLoaded', function () {
         nagadRadio.dispatchEvent(new Event('change'));
     });
 
-    // Handle accordion collapse event
-    nagadAccordion.addEventListener('hidden.bs.collapse', function () {
-        nagadInputArea.innerHTML = '';
-    });
-
-    // Handle deselection of other radio buttons
-    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#nagad)');
-    otherRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (!nagadRadio.checked) {
+    // Handle other accordions opening
+    const allAccordions = document.querySelectorAll('.accordion-collapse');
+    allAccordions.forEach(accordion => {
+        accordion.addEventListener('show.bs.collapse', function () {
+            if (accordion !== nagadAccordion) {
                 nagadInputArea.innerHTML = '';
             }
         });
@@ -955,7 +944,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Handle Rocket input area------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle Rocket input area
     const rocketRadio = document.getElementById('rocket');
     const rocketInputArea = document.getElementById('rocket-input-area');
     const rocketAccordionButton = document.querySelector('[data-bs-target="#flush-collapseThree"]');
@@ -985,16 +973,11 @@ document.addEventListener('DOMContentLoaded', function () {
         rocketRadio.dispatchEvent(new Event('change'));
     });
 
-    // Handle accordion collapse event
-    rocketAccordion.addEventListener('hidden.bs.collapse', function () {
-        rocketInputArea.innerHTML = '';
-    });
-
-    // Handle deselection of other radio buttons
-    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#rocket)');
-    otherRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (!rocketRadio.checked) {
+    // Handle other accordions opening
+    const allAccordions = document.querySelectorAll('.accordion-collapse');
+    allAccordions.forEach(accordion => {
+        accordion.addEventListener('show.bs.collapse', function () {
+            if (accordion !== rocketAccordion) {
                 rocketInputArea.innerHTML = '';
             }
         });
@@ -1005,7 +988,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Handle Upay input area--------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle Upay input area
     const upayRadio = document.getElementById('upay');
     const upayInputArea = document.getElementById('upay-input-area');
     const upayAccordionButton = document.querySelector('[data-bs-target="#flush-collapseFour"]');
@@ -1035,16 +1017,11 @@ document.addEventListener('DOMContentLoaded', function () {
         upayRadio.dispatchEvent(new Event('change'));
     });
 
-    // Handle accordion collapse event
-    upayAccordion.addEventListener('hidden.bs.collapse', function () {
-        upayInputArea.innerHTML = '';
-    });
-
-    // Handle deselection of other radio buttons
-    const otherRadios = document.querySelectorAll('input[name="payment_method"]:not(#upay)');
-    otherRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (!upayRadio.checked) {
+    // Handle other accordions opening
+    const allAccordions = document.querySelectorAll('.accordion-collapse');
+    allAccordions.forEach(accordion => {
+        accordion.addEventListener('show.bs.collapse', function () {
+            if (accordion !== upayAccordion) {
                 upayInputArea.innerHTML = '';
             }
         });
