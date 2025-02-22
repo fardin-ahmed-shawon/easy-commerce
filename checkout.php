@@ -18,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = $_POST['address'];
     $city = $_POST['city'];
     $payment_method = $_POST['payment_method'];
-    $accNum = $_POST['accNum'];
-    $transactionID = $_POST['transactionID'];
 
     // Assuming you have user_id in session
     $user_id = $_SESSION['id'];
@@ -48,19 +46,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
 
     if ($stmt->execute()) {
-        // Get the last inserted order number
-        $order_no = $conn->insert_id;
+        if ($payment_method != "Cash On Delivery") {
+            // Get the last inserted order number
+            $order_no = $conn->insert_id;
 
-        // Insert data into payment_info table
-        $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
-        VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
-        $stmt_payment = $conn->prepare($sql_payment);
-        $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+            // Retrive payment information
+            $accNum = $_POST['accNum'];
+            $transactionID = $_POST['transactionID'];
 
-        $stmt_payment->execute();
-        $stmt_payment->close();
+            // if ($accNum == ""|| $transactionID == "") {
+            //     exit("Please provide both account number and transaction ID");
+            // }
 
-        echo "Order and payment info placed successfully!";
+            // Insert data into payment_info table
+            $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
+            VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
+            $stmt_payment = $conn->prepare($sql_payment);
+            $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+
+            $stmt_payment->execute();
+            $stmt_payment->close();
+
+            echo "Order and payment info placed successfully!";
+        }
     } else {
         echo "Error: " . $stmt->error;
     }
