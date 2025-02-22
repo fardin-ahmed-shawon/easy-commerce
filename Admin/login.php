@@ -20,6 +20,12 @@ session_start();
             transition: width 3s linear;
             display: none;
         }
+        .credentials {
+            background: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -27,6 +33,13 @@ session_start();
     <!-- Login form container -->
     <form action="#" method="post">
       <h3>Admin Login</h3>
+
+      <br>
+      <div class="credentials">
+        <p>username: admin_39_</p>
+        <p>password: 54321</p>
+      </div>
+
       <br><br>
       <h3 class="msg-box"></h3>
       <!-- username input box -->
