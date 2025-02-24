@@ -9,7 +9,8 @@ if (!isset($_SESSION['phone'])) {
 include 'database/dbConnection.php';
 
 error_reporting(0);
-// Insertion
+
+// Database insertion
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $firstName = $_POST['firstName'];
@@ -25,13 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Assuming you have user_id in session
     $user_id = $_SESSION['id'];
 
-    // Product details
-    $product_id = 1;
-    $product_title = "Default";
-    $product_quantity = 2;
-    $product_size = "Default";
-    $total_price = 1000;
-
     // Generate a unique invoice number
     function generateInvoiceNo() {
         // Get the current timestamp in microseconds
@@ -43,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $invoice_no = generateInvoiceNo();
 
-    if ($payment_method != "Cash On Delivery" && ($accNum == ""|| $transactionID == "")) {
+    if ($payment_method != "Cash On Delivery" && ($accNum == "" || $transactionID == "")) {
         ?>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -59,51 +53,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </script>
         <?php
     } else {
-        // Insert data into order_info table
-        $sql = "INSERT INTO order_info (user_id, user_first_name, user_last_name, user_phone, user_email, user_address, city_address, invoice_no, product_id, product_title, product_quantity, product_size, total_price, payment_method)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
+        // Retrieve cart data from POST request
+        $cartData = json_decode($_POST['cartData'], true);
 
-        if ($stmt->execute()) {
-            if ($payment_method != "Cash On Delivery") {
-                // Get the last inserted order number
-                $order_no = $conn->insert_id;
+        foreach ($cartData as $product) {
+            $product_id = $product['id'];
+            $product_title = $product['name'];
+            $product_quantity = $product['quantity'];
+            $product_size = isset($product['size']) ? $product['size'] : 'Default';
+            $total_price = $product['price'] * $product_quantity;
 
-                // Insert data into payment_info table
-                $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
-                VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
-                $stmt_payment = $conn->prepare($sql_payment);
-                $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+            // Insert data into order_info table
+            $sql = "INSERT INTO order_info (user_id, user_first_name, user_last_name, user_phone, user_email, user_address, city_address, invoice_no, product_id, product_title, product_quantity, product_size, total_price, payment_method)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("isssssssisisss", $user_id, $firstName, $lastName, $phone, $email, $address, $city, $invoice_no, $product_id, $product_title, $product_quantity, $product_size, $total_price, $payment_method);
 
-                $stmt_payment->execute();
-                $stmt_payment->close();
-                
+            if ($stmt->execute()) {
+                if ($payment_method != "Cash On Delivery") {
+                    // Get the last inserted order number
+                    $order_no = $conn->insert_id;
+
+                    // Insert data into payment_info table
+                    $sql_payment = "INSERT INTO payment_info (invoice_no, order_no, order_status, payment_method, acc_number, transaction_id, payment_status)
+                    VALUES (?, ?, 'Pending', ?, ?, ?, 'Unpaid')";
+                    $stmt_payment = $conn->prepare($sql_payment);
+                    $stmt_payment->bind_param("sisss", $invoice_no, $order_no, $payment_method, $accNum, $transactionID);
+
+                    $stmt_payment->execute();
+                    $stmt_payment->close();
+                }
+            } else {
+                $err_msg = "Order Not Placed!";
             }
-            ?>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        let success_msg = document.getElementById("success-msg");
-                        if (success_msg) {
-                            success_msg.style.display = "block";
-                            success_msg.innerText = "Order Placed Successfully!";
-                            setTimeout(() => {
-                                success_msg.style.display = "none";
-                                window.location.href = "index.php";
-                                // Clear the product list after placing the orde
-                                localStorage.clear();
-                            }, 2000);
-                        }
-                    });
-                </script>
-            <?php
-        } else {
-            // $msg = "Error: " . $stmt->error;
-            $err_msg = "Order Not Placed!";
+            $stmt->close();
         }
-        $stmt->close();
+
+        $conn->close();
+        ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let success_msg = document.getElementById("success-msg");
+                if (success_msg) {
+                    success_msg.style.display = "block";
+                    success_msg.innerText = "Order Placed Successfully!";
+                    setTimeout(() => {
+                        success_msg.style.display = "none";
+                        window.location.href = "index.php";
+                        // Clear the product list after placing the order
+                        localStorage.clear();
+                    }, 2000);
+                }
+            });
+        </script>
+        <?php
     }
-    $conn->close();
 }
 ?>
 
@@ -1097,6 +1101,30 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //-------------------------------------------------------------------------------------------------------------------
 
+// Add this script to your existing JavaScript code
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+        const formData = new FormData(form);
+
+        // Add cart data to form data
+        formData.append('cartData', JSON.stringify(cartData));
+
+        // Send the form data to the server
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.body.innerHTML = data;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
 
 </script>
 
