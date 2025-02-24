@@ -926,182 +926,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     
 
-// Handle bKash input area-------------------------------------------------------------------------------------------
+// Handle Payment Information Input Area -------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
-    const bkashRadio = document.getElementById('bKash');
-    const bkashInputArea = document.getElementById('bkash-input-area');
-    const bkashAccordionButton = document.querySelector('[data-bs-target="#flush-collapseOne"]');
-    const bkashAccordion = document.getElementById('flush-collapseOne');
+    const paymentMethods = [
+        { id: 'bKash', inputAreaId: 'bkash-input-area', accordionId: 'flush-collapseOne' },
+        { id: 'nagad', inputAreaId: 'nagad-input-area', accordionId: 'flush-collapseTwo' },
+        { id: 'rocket', inputAreaId: 'rocket-input-area', accordionId: 'flush-collapseThree' },
+        { id: 'upay', inputAreaId: 'upay-input-area', accordionId: 'flush-collapseFour' }
+    ];
 
-    bkashRadio.addEventListener('change', function () {
-        if (bkashRadio.checked) {
-            bkashInputArea.innerHTML = `
-                <div class="input-box">
-                    <label for="t_num">Your bKash Account Number</label>
-                    <input name="accNum" class="form-control" id="bKash_accNum" type="text" placeholder="01XXXXXXXXX">
-                </div>
-                <br>
-                <div class="input-box">
-                    <label for="t_id">Your bKash Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="bKash_transactionID" type="text" placeholder="Enter Transaction ID">
-                </div>
-            `;
-        } else {
-            bkashInputArea.innerHTML = '';
-        }
-    });
+    paymentMethods.forEach(method => {
+        const radio = document.getElementById(method.id);
+        const inputArea = document.getElementById(method.inputAreaId);
+        const accordionButton = document.querySelector(`[data-bs-target="#${method.accordionId}"]`);
+        const accordion = document.getElementById(method.accordionId);
 
-    // Handle accordion button click
-    bkashAccordionButton.addEventListener('click', function () {
-        bkashRadio.checked = true;
-        bkashRadio.dispatchEvent(new Event('change'));
-    });
-
-    // Handle other accordions opening
-    const allAccordions = document.querySelectorAll('.accordion-collapse');
-    allAccordions.forEach(accordion => {
-        accordion.addEventListener('show.bs.collapse', function () {
-            if (accordion !== bkashAccordion) {
-                bkashInputArea.innerHTML = '';
+        radio.addEventListener('change', function () {
+            if (radio.checked) {
+                inputArea.innerHTML = `
+                    <div class="input-box">
+                        <label for="${method.id}_accNum">Your ${method.id} Account Number</label>
+                        <input name="accNum" class="form-control" id="${method.id}_accNum" type="text" placeholder="01XXXXXXXXX">
+                    </div>
+                    <br>
+                    <div class="input-box">
+                        <label for="${method.id}_transactionID">Your ${method.id} Transaction ID</label>
+                        <input name="transactionID" class="form-control" id="${method.id}_transactionID" type="text" placeholder="Enter Transaction ID">
+                    </div>
+                `;
+            } else {
+                inputArea.innerHTML = '';
             }
         });
+
+        accordionButton.addEventListener('click', function () {
+            radio.checked = true;
+            radio.dispatchEvent(new Event('change'));
+        });
+
+        const allAccordions = document.querySelectorAll('.accordion-collapse');
+        allAccordions.forEach(acc => {
+            acc.addEventListener('show.bs.collapse', function () {
+                if (acc !== accordion) {
+                    inputArea.innerHTML = '';
+                }
+            });
+        });
+    });
+
+    // Clear input areas when "Cash On Delivery" is selected
+    const codRadio = document.getElementById('cod');
+    codRadio.addEventListener('change', function () {
+        if (codRadio.checked) {
+            paymentMethods.forEach(method => {
+                const inputArea = document.getElementById(method.inputAreaId);
+                inputArea.innerHTML = '';
+            });
+        }
     });
 });
 //-------------------------------------------------------------------------------------------------------------------
 
 
-// Handle Nagad input area--------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const nagadRadio = document.getElementById('nagad');
-    const nagadInputArea = document.getElementById('nagad-input-area');
-    const nagadAccordionButton = document.querySelector('[data-bs-target="#flush-collapseTwo"]');
-    const nagadAccordion = document.getElementById('flush-collapseTwo');
-
-    nagadRadio.addEventListener('change', function () {
-        if (nagadRadio.checked) {
-            nagadInputArea.innerHTML = `
-                <div class="input-box">
-                    <label for="nagad_accNum">Your Nagad Account Number</label>
-                    <input name="accNum" class="form-control" id="nagad_accNum" type="text" placeholder="01XXXXXXXXX">
-                </div>
-                <br>
-                <div class="input-box">
-                    <label for="nagad_transactionID">Your Nagad Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="nagad_transactionID" type="text" placeholder="Enter Transaction ID">
-                </div>
-            `;
-        } else {
-            nagadInputArea.innerHTML = '';
-        }
-    });
-
-    // Handle accordion button click
-    nagadAccordionButton.addEventListener('click', function () {
-        nagadRadio.checked = true;
-        nagadRadio.dispatchEvent(new Event('change'));
-    });
-
-    // Handle other accordions opening
-    const allAccordions = document.querySelectorAll('.accordion-collapse');
-    allAccordions.forEach(accordion => {
-        accordion.addEventListener('show.bs.collapse', function () {
-            if (accordion !== nagadAccordion) {
-                nagadInputArea.innerHTML = '';
-            }
-        });
-    });
-});
-//-------------------------------------------------------------------------------------------------------------------
-
-
-// Handle Rocket input area------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const rocketRadio = document.getElementById('rocket');
-    const rocketInputArea = document.getElementById('rocket-input-area');
-    const rocketAccordionButton = document.querySelector('[data-bs-target="#flush-collapseThree"]');
-    const rocketAccordion = document.getElementById('flush-collapseThree');
-
-    rocketRadio.addEventListener('change', function () {
-        if (rocketRadio.checked) {
-            rocketInputArea.innerHTML = `
-                <div class="input-box">
-                    <label for="rocket_accNum">Your Rocket Account Number</label>
-                    <input name="accNum" class="form-control" id="rocket_accNum" type="text" placeholder="01XXXXXXXXX">
-                </div>
-                <br>
-                <div class="input-box">
-                    <label for="rocket_transactionID">Your Rocket Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="rocket_transactionID" type="text" placeholder="Enter Transaction ID">
-                </div>
-            `;
-        } else {
-            rocketInputArea.innerHTML = '';
-        }
-    });
-
-    // Handle accordion button click
-    rocketAccordionButton.addEventListener('click', function () {
-        rocketRadio.checked = true;
-        rocketRadio.dispatchEvent(new Event('change'));
-    });
-
-    // Handle other accordions opening
-    const allAccordions = document.querySelectorAll('.accordion-collapse');
-    allAccordions.forEach(accordion => {
-        accordion.addEventListener('show.bs.collapse', function () {
-            if (accordion !== rocketAccordion) {
-                rocketInputArea.innerHTML = '';
-            }
-        });
-    });
-});
-//--------------------------------------------------------------------------------------------------------------------
-
-
-// Handle Upay input area--------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const upayRadio = document.getElementById('upay');
-    const upayInputArea = document.getElementById('upay-input-area');
-    const upayAccordionButton = document.querySelector('[data-bs-target="#flush-collapseFour"]');
-    const upayAccordion = document.getElementById('flush-collapseFour');
-
-    upayRadio.addEventListener('change', function () {
-        if (upayRadio.checked) {
-            upayInputArea.innerHTML = `
-                <div class="input-box">
-                    <label for="upay_accNum">Your Upay Account Number</label>
-                    <input name="accNum" class="form-control" id="upay_accNum" type="text" placeholder="01XXXXXXXXX">
-                </div>
-                <br>
-                <div class="input-box">
-                    <label for="upay_transactionID">Your Upay Transaction ID</label>
-                    <input name="transactionID" class="form-control" id="upay_transactionID" type="text" placeholder="Enter Transaction ID">
-                </div>
-            `;
-        } else {
-            upayInputArea.innerHTML = '';
-        }
-    });
-
-    // Handle accordion button click
-    upayAccordionButton.addEventListener('click', function () {
-        upayRadio.checked = true;
-        upayRadio.dispatchEvent(new Event('change'));
-    });
-
-    // Handle other accordions opening
-    const allAccordions = document.querySelectorAll('.accordion-collapse');
-    allAccordions.forEach(accordion => {
-        accordion.addEventListener('show.bs.collapse', function () {
-            if (accordion !== upayAccordion) {
-                upayInputArea.innerHTML = '';
-            }
-        });
-    });
-});
-//-------------------------------------------------------------------------------------------------------------------
-
-// Add this script to your existing JavaScript code
+// Send product data from the localstora to the server
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     form.addEventListener('submit', (event) => {
