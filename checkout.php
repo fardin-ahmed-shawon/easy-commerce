@@ -38,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $invoice_no = generateInvoiceNo();
 
     if ($payment_method != "Cash On Delivery" && ($accNum == "" || $transactionID == "")) {
+        // echo "Please Provide both Account Number and Transaction ID!";
         ?>
+        <META HTTP-EQUIV="Refresh" CONTENT="2; URL=checkout.php">
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let msg_box = document.getElementById("msg");
@@ -90,7 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $conn->close();
+        echo "Order Placed Successfully";
         ?>
+        <META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let success_msg = document.getElementById("success-msg");
@@ -946,12 +950,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 inputArea.innerHTML = `
                     <div class="input-box">
                         <label for="${method.id}_accNum">Your ${method.id} Account Number</label>
-                        <input name="accNum" class="form-control" id="${method.id}_accNum" type="text" placeholder="01XXXXXXXXX">
+                        <input name="accNum" class="form-control" id="${method.id}_accNum" type="text" placeholder="01XXXXXXXXX" required>
                     </div>
                     <br>
                     <div class="input-box">
                         <label for="${method.id}_transactionID">Your ${method.id} Transaction ID</label>
-                        <input name="transactionID" class="form-control" id="${method.id}_transactionID" type="text" placeholder="Enter Transaction ID">
+                        <input name="transactionID" class="form-control" id="${method.id}_transactionID" type="text" placeholder="Enter Transaction ID" required>
                     </div>
                 `;
             } else {
@@ -985,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-//-------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 
 
 // Send product data from the localstora to the server
@@ -1008,11 +1012,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(data => {
             document.body.innerHTML = data;
+            localStorage.clear();
+            window.location.href = "index.php";
         })
         .catch(error => console.error('Error:', error));
     });
 });
-
 </script>
 
 </body>
