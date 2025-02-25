@@ -235,71 +235,33 @@ if (!isset($_SESSION['admin'])) {
                         <th>Customer ID</th>
                         <th>Customer Phone</th>
                         <th>Customer Email</th>
-                        <th>Address</th>
                         <th>Gender</th>
-                        <th>Total Purchased</th>
                         <th>Action</th>
                       </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Fardin</td>
-                        <td>Ahmed</td>
-                        <td>235</td>
-                        <td>01944667441</td>
-                        <td>mdshawon7443@gmail.com</td>
-                        <td>Mohammadpur, Dhaka</td>
-                        <td>Male</td>
-                        <td>13</td>
-                        <td><button class="btn btn-dark">Delete</button></td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Fardin</td>
-                        <td>Ahmed</td>
-                        <td>235</td>
-                        <td>01944667441</td>
-                        <td>mdshawon7443@gmail.com</td>
-                        <td>Mohammadpur, Dhaka</td>
-                        <td>Male</td>
-                        <td>13</td>
-                        <td><button class="btn btn-dark">Delete</button></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Fardin</td>
-                        <td>Ahmed</td>
-                        <td>235</td>
-                        <td>01944667441</td>
-                        <td>mdshawon7443@gmail.com</td>
-                        <td>Mohammadpur, Dhaka</td>
-                        <td>Male</td>
-                        <td>13</td>
-                        <td><button class="btn btn-dark">Delete</button></td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Fardin</td>
-                        <td>Ahmed</td>
-                        <td>235</td>
-                        <td>01944667441</td>
-                        <td>mdshawon7443@gmail.com</td>
-                        <td>Mohammadpur, Dhaka</td>
-                        <td>Male</td>
-                        <td>13</td>
-                        <td><button class="btn btn-dark">Delete</button></td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Fardin</td>
-                        <td>Ahmed</td>
-                        <td>235</td>
-                        <td>01944667441</td>
-                        <td>mdshawon7443@gmail.com</td>
-                        <td>Mohammadpur, Dhaka</td>
-                        <td>Male</td>
-                        <td>13</td>
-                        <td><button class="btn btn-dark">Delete</button></td>
-                      </tr>
+                      <?php
+                      include 'database/dbConnection.php';
+                      $sql = "SELECT user_id, user_fName, user_lName, user_phone, user_email, user_gender FROM user_info";
+                      $result = $conn->query($sql);
+
+                      if ($result->num_rows > 0) {
+                        $serialNo = 1;
+                          while($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $serialNo++ . "</td>";
+                            echo "<td>" . $row["user_fName"] . "</td>";
+                            echo "<td>" . $row["user_lName"] . "</td>";
+                            echo "<td>" . $row["user_id"] . "</td>";
+                            echo "<td>" . $row["user_phone"] . "</td>";
+                            echo "<td>" . $row["user_email"] . "</td>";
+                            echo "<td>" . $row["user_gender"] . "</td>";
+                            echo '<td><button class="btn btn-dark">Remove</button></td>';
+                            echo "</tr>";
+                          }
+                      } else {
+                        echo "<tr><td colspan='8'>No customers found</td></tr>";
+                      }
+                      $conn->close();
+                      ?>
                   </tbody>
                </table>
               </div>
@@ -327,7 +289,5 @@ if (!isset($_SESSION['admin'])) {
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
-
-
   </body>
 </html>
