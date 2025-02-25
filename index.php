@@ -1,3 +1,7 @@
+<?php
+// database connection
+include 'database/dbConnection.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -355,6 +359,24 @@
             <br><hr><br>
             <div class="grid-container new-arrival-products">
                 <!-- All Product Card Will Add Here Dynamically -->
+                <?php
+                    $sql = "SELECT * FROM product_info";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    $products = array();
+                    while ($item = mysqli_fetch_array($result)) {
+                        echo "<div class='card' product-id='$item[product_id]' product-title='$item[product_title]' product-img='img/$item[product_img1]' product-price='$item[product_price]' product-quantity='1'>
+                        <img src='img/$item[product_img1]' class='card-img-top' alt='img'>
+                        <div class='card-body'>
+                            <h6>$item[product_title]</h6>
+                            <p>$item[sub_ctg_name]</p>
+                            <h6>Tk. $item[product_price]</h6>
+                            <button onclick='addToCart(this)' class='btn btn-outline-dark'><span>Add to Cart</span> <i class='ri-shopping-bag-line'></i></button>
+                            <button onclick='openProduct(\"$item[product_id]\")' class='btn btn-dark'><span>Order Now</span> <i class='ri-shopping-cart-2-line'></i></button>
+                        </div>
+                    </div>";
+                    }
+                ?>
             </div>
         </div>
      </section>
@@ -376,6 +398,24 @@
             <br><hr><br>
             <div class="grid-container top-selling-products">
                 <!-- All Product Card Will Add Here Dynamically -->
+                <?php
+                    $sql = "SELECT * FROM product_info";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    $products = array();
+                    while ($item = mysqli_fetch_array($result)) {
+                        echo "<div class='card' product-id='$item[product_id]' product-title='$item[product_title]' product-img='img/$item[product_img1]' product-price='$item[product_price]' product-quantity='1'>
+                        <img src='img/$item[product_img1]' class='card-img-top' alt='img'>
+                        <div class='card-body'>
+                            <h6>$item[product_title]</h6>
+                            <p>$item[sub_ctg_name]</p>
+                            <h6>Tk. $item[product_price]</h6>
+                            <button onclick='addToCart(this)' class='btn btn-outline-dark'><span>Add to Cart</span> <i class='ri-shopping-bag-line'></i></button>
+                            <button onclick='openProduct(\"$item[product_id]\")' class='btn btn-dark'><span>Order Now</span> <i class='ri-shopping-cart-2-line'></i></button>
+                        </div>
+                    </div>";
+                    }
+                ?>
             </div>
         </div>
     </section>
@@ -399,6 +439,24 @@
                 <br><hr><br>
                 <div class="grid-container home-mens-fashion-products">
                     <!-- All Product Card Will Add Here Dynamically -->
+                    <?php
+                    $sql = "SELECT * FROM product_info";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    $products = array();
+                    while ($item = mysqli_fetch_array($result)) {
+                        echo "<div class='card' product-id='$item[product_id]' product-title='$item[product_title]' product-img='img/$item[product_img1]' product-price='$item[product_price]' product-quantity='1'>
+                        <img src='img/$item[product_img1]' class='card-img-top' alt='img'>
+                        <div class='card-body'>
+                            <h6>$item[product_title]</h6>
+                            <p>$item[sub_ctg_name]</p>
+                            <h6>Tk. $item[product_price]</h6>
+                            <button onclick='addToCart(this)' class='btn btn-outline-dark'><span>Add to Cart</span> <i class='ri-shopping-bag-line'></i></button>
+                            <button onclick='openProduct(\"$item[product_id]\")' class='btn btn-dark'><span>Order Now</span> <i class='ri-shopping-cart-2-line'></i></button>
+                        </div>
+                    </div>";
+                    }
+                ?>
                 </div>
             </div>
         </section>
@@ -420,6 +478,24 @@
                 <br><hr><br>
                 <div class="grid-container home-womens-fashion-products">
                     <!-- All Product Card Will Add Here Dynamically -->
+                    <?php
+                    $sql = "SELECT * FROM product_info";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    $products = array();
+                    while ($item = mysqli_fetch_array($result)) {
+                        echo "<div class='card' product-id='$item[product_id]' product-title='$item[product_title]' product-img='img/$item[product_img1]' product-price='$item[product_price]' product-quantity='1'>
+                        <img src='img/$item[product_img1]' class='card-img-top' alt='img'>
+                        <div class='card-body'>
+                            <h6>$item[product_title]</h6>
+                            <p>$item[sub_ctg_name]</p>
+                            <h6>Tk. $item[product_price]</h6>
+                            <button onclick='addToCart(this)' class='btn btn-outline-dark'><span>Add to Cart</span> <i class='ri-shopping-bag-line'></i></button>
+                            <button onclick='openProduct(\"$item[product_id]\")' class='btn btn-dark'><span>Order Now</span> <i class='ri-shopping-cart-2-line'></i></button>
+                        </div>
+                    </div>";
+                    }
+                ?>
                 </div>
             </div>
         </section>
@@ -548,8 +624,6 @@
 <script src="js/jquery.waypoints.min.js"></script>
 
 <!-- Main JS -->
-<script src="js/mens.js"></script>
-<script src="js/womens.js"></script>
 <script src="js/main.js"></script>
 <script src="js/cartCalculation.js"></script>
 <script src="js/search.js"></script>

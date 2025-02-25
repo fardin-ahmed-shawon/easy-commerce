@@ -262,6 +262,26 @@
         <div class="bg-gray">
             <div class="container grid-container py-5 mens-fashion-products">
                 <!-- Men's Product Will Add Automatically -->
+                <?php
+                    include 'database/dbConnection.php';
+
+                    $sql = "SELECT * FROM product_info";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    $products = array();
+                    while ($item = mysqli_fetch_array($result)) {
+                        echo "<div class='card' product-id='$item[product_id]' product-title='$item[product_title]' product-img='img/$item[product_img1]' product-price='$item[product_price]' product-quantity='1'>
+                        <img src='img/$item[product_img1]' class='card-img-top' alt='img'>
+                        <div class='card-body'>
+                            <h6>$item[product_title]</h6>
+                            <p>$item[sub_ctg_name]</p>
+                            <h6>Tk. $item[product_price]</h6>
+                            <button onclick='addToCart(this)' class='btn btn-outline-dark'><span>Add to Cart</span> <i class='ri-shopping-bag-line'></i></button>
+                            <button onclick='openProduct(\"$item[product_id]\")' class='btn btn-dark'><span>Order Now</span> <i class='ri-shopping-cart-2-line'></i></button>
+                        </div>
+                    </div>";
+                    }
+                ?>
             </div>
         </div>
     </section>
@@ -393,7 +413,6 @@
 <script src="js/main.js"></script>
 <script src="js/cartCalculation.js"></script>
 <script src="js/search.js"></script>
-<script src="js/search.js"></script>
 
 <script>
     // Sticky Navbar
@@ -402,52 +421,6 @@
             "down" == t ? $("nav").addClass("sticky") : $("nav").removeClass("sticky");
         });
     });
-
-    /*************************************************/
-    /* Add Men's products dynamically Category Page */
-
-    // Fetch product data from the API
-    fetch('get_products.php')
-    .then(response => response.json())
-    .then(data => {
-        const mens_products = document.querySelector('.mens-fashion-products');
-
-        // Mapping Product Data
-        const categories = [...new Set(data.map((item) => { return item }))];
-
-        const displayItem = (items) => {
-            mens_products.innerHTML = items.map((item) => {
-                return `
-                    <div class="card" product-id="${item.id}" product-title="${item.title}" product-img="${item.image}" product-price="${item.price}" product-quantity="1">
-                        <img src="${item.image}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h6>${item.title}</h6>
-                            <p>${item.sub_category}</p>
-                            <h6>Tk. ${item.price}</h6>
-                            <button onclick="addToCart(this)" class="btn btn-outline-dark"><span>Add to Cart</span> <i class="ri-shopping-bag-line"></i></button>
-                            <button onclick="openProduct('${item.id}')" class="btn btn-dark"><span>Order Now</span> <i class="ri-shopping-cart-2-line"></i></button>
-                        </div>
-                    </div>`;
-            }).join('');
-        };
-
-        displayItem(categories);
-
-        document.getElementById('searchBar').addEventListener('keyup', (e) => {
-            const searchData = e.target.value.toLowerCase();
-            const filterData = categories.filter((item) => {
-                return item.title.toLowerCase().includes(searchData);
-            });
-            displayItem(filterData);
-        });
-
-        function openProduct(id) {
-            localStorage.setItem('selectedProductId', id);
-            window.location.href = 'product.php';
-        }
-    })
-    .catch(error => console.error('Error fetching product data:', error));
-
 </script>
 
 </body>
