@@ -76,7 +76,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                     <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                     <h4 class="font-weight-normal mb-3">Total Products <i class="mdi mdi-cart-check mdi-24px float-end"></i>
                     </h4>
-                    <h1 class="mb-5">30</h1>
+                    <h1 class="mb-5">
+                      <?php
+                      // Fetch total products from product_info table
+                      $sql = "SELECT COUNT(product_id) AS total_products FROM product_info";
+                      $result = $conn->query($sql);
+                      $row = $result->fetch_assoc();
+                      echo $row['total_products'];
+                      ?>
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -87,7 +95,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                     <h4 class="font-weight-normal mb-3">Customers 
                       <i class="mdi mdi-account mdi-24px float-end"></i>
                     </h4>
-                    <h1 class="mb-5">450</h1>
+                    <h1 class="mb-5">
+                      <?php
+                      // Fetch total customers from user_info table
+                      $sql = "SELECT COUNT(user_id) AS total_customers FROM user_info";
+                      $result = $conn->query($sql);
+                      $row = $result->fetch_assoc();
+                      echo $row['total_customers'];
+                      ?>
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -97,7 +113,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                     <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                     <h4 class="font-weight-normal mb-3">Product Categories <i class="mdi mdi-apps mdi-24px float-end"></i>
                     </h4>
-                    <h1 class="mb-5">95</h1>
+                    <h1 class="mb-5">
+                      <?php
+                      // Fetch total categories from category_info table
+                      $sql = "SELECT COUNT(sub_ctg_id) AS total_categories FROM sub_category";
+                      $result = $conn->query($sql);
+                      $row = $result->fetch_assoc();
+                      echo $row['total_categories'];
+                      ?>
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -107,7 +131,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                     <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                     <h4 class="font-weight-normal mb-3">Active Orders <i class="mdi mdi-order-bool-ascending mdi-24px float-end"></i>
                     </h4>
-                    <h1 class="mb-5">17</h1>
+                    <h1 class="mb-5">
+                      <?php
+                      // Fetch total active orders from order_info table
+                      $sql = "SELECT COUNT(order_no) AS total_orders FROM order_info";
+                      $result = $conn->query($sql);
+                      $row = $result->fetch_assoc();
+                      echo $row['total_orders'];
+                      ?>
+                    </h1>
                   </div>
                 </div>
               </div>
