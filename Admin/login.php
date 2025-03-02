@@ -77,7 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows == 1) {
         // Admin authenticated successfully
         $_SESSION['admin'] = $username;
-        header("Location: index.php"); 
+        ?>
+        <META http-equiv="refresh" content="0;url=index.php"> 
+        <?php
         exit();
     } else {
         // Authentication failed
