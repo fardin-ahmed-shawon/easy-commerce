@@ -99,7 +99,7 @@ include 'cartBar.php';
             <h1>Categories</h1>
             <p>Explore all the product categories</p>
             <br><br>
-
+            <!-- Category Card -->
             <div class="grid-container">
                 <div class="card category-card">
                     <!-- <img src="img/home2.jpg" class="card-img-top" alt="..."> -->

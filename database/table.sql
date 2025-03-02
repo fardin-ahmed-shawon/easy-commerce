@@ -29,6 +29,11 @@ CREATE TABLE sub_category (
     FOREIGN KEY (main_ctg_name) REFERENCES main_category(main_ctg_name) ON DELETE CASCADE
 );
 
+CREATE TABLE slider (
+    slider_id INT PRIMARY KEY AUTO_INCREMENT,
+    slider_img VARCHAR(255)
+);
+
 CREATE TABLE product_info (
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_title VARCHAR(255) NOT NULL,

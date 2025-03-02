@@ -29,7 +29,7 @@
                 </a>
             </div>
             <br>
-            <p class="copyright">© 2025 Name. All rights reserved.</p>
+            <p class="copyright">© 2025 Easy Tech Solutions. All rights reserved.</p>
         </div>
         <div class="about">
             <h6>about</h6>
@@ -57,7 +57,7 @@
                     <button type="submit" class="btn btn-danger">Subscribe</button>
             </form>
             <br><br><br>
-            <p class="copyright">© 2025 Name. All rights reserved.</p>
+            <p class="copyright">© 2025 Easy Tech Solutions. All rights reserved.</p>
         </div>
     </div>
 </footer>
