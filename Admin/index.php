@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accept_order'])) {
                     <h1 class="mb-5">
                       <?php
                       // Fetch total categories from category_info table
-                      $sql = "SELECT COUNT(sub_ctg_id) AS total_categories FROM sub_category";
+                      $sql = "SELECT COUNT(main_ctg_id) AS total_categories FROM main_category";
                       $result = $conn->query($sql);
                       $row = $result->fetch_assoc();
                       echo $row['total_categories'];

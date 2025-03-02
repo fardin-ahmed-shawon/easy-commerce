@@ -323,7 +323,7 @@ include 'cartBar.php';
                                                     <p>5. Now enter your bKash Account PIN to confirm the transaction</p>
                                                     <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
                                                     <br>
-                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <p>You need to send us Tk. <span class="text-danger send-amount"></span></p>
                                                     <br>
                                                     <p>Account Type: <span class="text-danger">Personal</span></p>
                                                     <p>Account Number: <span class="text-danger">01944667441</span></p>
@@ -354,7 +354,7 @@ include 'cartBar.php';
                                                     <p>5. Now enter your Nagad Account PIN to confirm the transaction</p>
                                                     <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
                                                     <br>
-                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <p>You need to send us Tk. <span class="text-danger send-amount"></span></p>
                                                     <br>
                                                     <p>Account Type: <span class="text-danger">Personal</span></p>
                                                     <p>Account Number: <span class="text-danger">01944667441</span></p>
@@ -384,7 +384,7 @@ include 'cartBar.php';
                                                     <p>5. Now enter your Rocket Account PIN to confirm the transaction</p>
                                                     <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
                                                     <br>
-                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <p>You need to send us Tk. <span class="text-danger send-amount"></span></p>
                                                     <br>
                                                     <p>Account Type: <span class="text-danger">Personal</span></p>
                                                     <p>Account Number: <span class="text-danger">01944667441</span></p>
@@ -414,7 +414,7 @@ include 'cartBar.php';
                                                     <p>5. Now enter your Upay Account PIN to confirm the transaction</p>
                                                     <p>6. Copy Transaction ID from payment confirmation message and paste that Transaction ID below</p>
                                                     <br>
-                                                    <p>You need to send us <span class="text-danger">Tk. 5600</span></p>
+                                                    <p>You need to send us Tk.<span class="text-danger send-amount"></span></p>
                                                     <br>
                                                     <p>Account Type: <span class="text-danger">Personal</span></p>
                                                     <p>Account Number: <span class="text-danger">01944667441</span></p>
@@ -505,6 +505,8 @@ include 'bottomNavBar.php';
             const subtotalPriceContainer = document.getElementById('subtotal-price');
             const shippingPriceContainer = document.getElementById('shipping-price');
             const totalPriceContainer = document.getElementById('total-price');
+            const send_amount = document.querySelectorAll('.send-amount');
+
             let subtotal = 0;
 
             let shipping_inside_dhaka = 70;
@@ -540,6 +542,9 @@ include 'bottomNavBar.php';
             subtotalPriceContainer.textContent = `Tk. ${subtotal}`;
             shippingPriceContainer.textContent = `Tk. ${shipping}`;
             totalPriceContainer.textContent = `Tk. ${subtotal + shipping}`;
+            send_amount.forEach(element => {
+                element.innerHTML = totalPriceContainer.textContent;
+            });
 
             // Add event listeners for increment and decrement buttons
             orderItemsContainer.addEventListener('click', (event) => {
@@ -614,6 +619,9 @@ include 'bottomNavBar.php';
                 });
                 subtotalPriceContainer.textContent = `Tk. ${newSubtotal}`;
                 totalPriceContainer.textContent = `Tk. ${newSubtotal + shipping}`;
+                send_amount.forEach(element => {
+                    element.innerHTML = totalPriceContainer.textContent;
+                });
             }
 
         });
