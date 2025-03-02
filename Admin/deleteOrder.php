@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
+    exit();
+}
 // database connection
 include('database/dbConnection.php');
 $order_no = $_GET['o_n'];

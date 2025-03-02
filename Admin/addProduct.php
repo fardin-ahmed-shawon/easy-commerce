@@ -91,182 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <body>
     <div class="container-scroller">
       <!-- partial:partials/_navbar.php -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="index.php">
-            <!-- <img src="assets/images/logo.svg" alt="logo" /> -->
-            <span class="logo">LOGO</span>
-          </a>
-          <a class="navbar-brand brand-logo-mini" href="index.php">
-            <img src="assets/images/logo-mini.svg" alt="logo" />
-          </a>
-        </div>
-        <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
-          <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item nav-profile dropdown">
-              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="nav-profile-img">
-                  <img src="assets/images/faces/face1.jpg" alt="image">
-                  <span class="availability-status online"></span>
-                </div>
-                <div class="nav-profile-text">
-                  <p class="mb-1 text-black">Admin</p>
-                </div>
-              </a>
-              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="logout.php">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Logout </a>
-              </div>
-            </li>
-            <li class="nav-item d-none d-lg-block full-screen-link">
-              <a class="nav-link">
-                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
-              </a>
-            </li>
-            <li class="nav-item nav-logout d-none d-lg-block">
-              <a class="nav-link" href="#">
-                <i class="mdi mdi-power"></i>
-              </a>
-            </li>
-          </ul>
-          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-            <span class="mdi mdi-menu"></span>
-          </button>
-        </div>
-      </nav>
+      <?php include('navbar.php'); ?>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         
         <!-- partial:partials/_sidebar.php -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-          <ul class="nav">
-            <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
-                <div class="nav-profile-image">
-                  <img src="assets/images/faces/face1.jpg" alt="profile" />
-                  <span class="login-status online"></span>
-                  <!--change to offline or busy as needed-->
-                </div>
-                <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">Name</span>
-                  <span class="text-secondary text-small">Product Manager</span>
-                </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
-              </a>
-            </li>
-            
-            
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#product" aria-expanded="false" aria-controls="product">
-                <span class="menu-title">Product</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-              <div class="collapse" id="product">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="addProduct.php">Add Product</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="viewProduct.php">View Product</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="categories">
-                <span class="menu-title">Product Categories</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
-              </a>
-              <div class="collapse" id="categories">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="insertCategory.php">Insert Category</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="viewCategory.php">View Category</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="deleteCategory.php">Delete Category</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="slider.php">
-                <span class="menu-title">Slider</span>
-                <i class="mdi mdi-menu-close menu-icon"></i>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="viewCustomers.php">
-                <span class="menu-title">View Customers</span>
-                <i class="mdi mdi-account menu-icon"></i>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order">
-                <span class="menu-title">View Orders</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-              <div class="collapse" id="order">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="pendingOrders.php">Pending Orders</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="viewOrders.php">Active Orders</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="viewPayments.php">
-                <span class="menu-title">View Payments</span>
-                <i class="mdi mdi-currency-usd menu-icon"></i>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="makeInvoice.php">
-                <span class="menu-title">Make Invoice</span>
-                <i class="mdi mdi-invoice-list-outline menu-icon"></i>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="purchaseHistory.php">
-                <span class="menu-title">Purchase History</span>
-                <i class="mdi mdi-history menu-icon"></i>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="logout.php">
-                <span class="menu-title">Logout</span>
-                <i class="mdi mdi-logout menu-icon"></i>
-              </a>
-            </li>
-
-          </ul>
-        </nav>
+        <?php include('sidebar.php'); ?>
         <div class="main-panel">
 
 
@@ -291,17 +121,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                       <div class="user-details full-input-box">
                         <!-- title -->
                         <div class="input-box">
-                          <span class="details">Product Title</span>
+                          <span class="details">Product Title *</span>
                           <input name="product_title" type="text" placeholder="Enter your product title" required>
                         </div>
                         <!-- price -->
                         <div class="input-box">
-                          <span class="details">Price</span>
+                          <span class="details">Price *</span>
                           <input name="product_price" type="text" placeholder="Enter your product price" required>
                         </div>
                         <!-- Main Category -->
                         <div class="input-box">
-                          <span class="details">Choose Main Category</span>
+                          <span class="details">Choose Main Category *</span>
                           <select id="main_ctg_name" name="product_main_ctg_name" required>
                             <option value="">Select Main Category</option>
                             <?php
@@ -316,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <!-- Sub Category -->
                         <div class="input-box">
-                          <span class="details">Choose Sub Category</span>
+                          <span class="details">Choose Sub Category *</span>
                           <select id="main_sub_name" name="product_sub_ctg_name" required>
                             <option value="">Select Sub Category</option>
                             <?php
@@ -331,17 +161,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <!-- Total Stock -->
                         <div class="input-box">
-                          <span class="details">Total Stock Amount</span>
+                          <span class="details">Total Stock Amount *</span>
                           <input name="available_stock" type="text" placeholder="Enter your total stock amount" required>
                         </div>
                         <!-- keyword -->
                         <div class="input-box">
-                          <span class="details">Product Keyword</span>
+                          <span class="details">Product Keyword *</span>
                           <input name="product_keyword" type="text" placeholder="Enter your product keyword" required>
                         </div>
                         <!-- Description -->
                         <div class="input-box">
-                          <span class="details">Description</span>
+                          <span class="details">Description *</span>
                           <input name="product_description" type="text" placeholder="Enter your product description" required>
                         </div>
                         <!-- Size -->
@@ -380,22 +210,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div> -->
                         <!-- main image -->
                         <div>
-                          <span class="details">Attach Primary Image</span>
+                          <span class="details">Attach Primary Image *</span>
                           <input type="file" name="product_img1" id="file" class="inputfile" required/><br>
                         </div>
                         <!-- image 2 -->
                         <div>
-                          <span class="details">Attach Image 2</span>
+                          <span class="details">Attach Image 2 *</span>
                           <input type="file" name="product_img2" id="file" class="inputfile"/><br>
                         </div>
                         <!-- image 3 -->
                         <div>
-                          <span class="details">Attach Image 3</span>
+                          <span class="details">Attach Image 3 *</span>
                           <input type="file" name="product_img3" id="file" class="inputfile"/><br>
                         </div>
                         <!-- image 4 -->
                         <div>
-                          <span class="details">Attach Image 4</span>
+                          <span class="details">Attach Image 4 *</span>
                           <input type="file" name="product_img4" id="file" class="inputfile"/><br>
                         </div>
                       </div>
@@ -415,11 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           
 
           <!-- partial:partials/_footer.php -->
-          <footer class="footer">
-            <div class="d-sm-flex justify-content-center">
-              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2025 <a href="#" target="_blank">Company Name</a>. All rights reserved.</span>
-            </div>
-          </footer>
+          <?php include('footer.php'); ?>
         </div>
       </div>
       <!-- page-body-wrapper ends -->
